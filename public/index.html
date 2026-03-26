@@ -1029,9 +1029,7 @@ const { useState, useEffect, useCallback, useMemo, useRef } = React;
 // ============================================
 // API LAYER
 // ============================================
-// When deployed: set window.CK_API_URL to your Railway backend URL
-// e.g. add <script>window.CK_API_URL='https://compliancekit.up.railway.app'</script>
-// before this script in index.html, OR set it via your build process.
+window.CK_API_URL = 'https://web-production-be130.up.railway.app';
 const API = (window.CK_API_URL || '') + '/api';
 const api = {
   get: async (path) => {
