@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ComplianceKit — AI Compliance Autopilot for Small Business</title>
 <meta name="description" content="Automate SOC 2, HIPAA, and GDPR compliance for your startup. AI-powered evidence collection, policy generation, and audit reports. Start free.">
+<meta property="og:title" content="ComplianceKit — AI Compliance Autopilot">
+<meta property="og:description" content="Automate SOC 2, HIPAA, and GDPR compliance for your startup. Start free.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://compliancekit.app">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ComplianceKit — AI Compliance Autopilot">
+<meta name="twitter:description" content="Automate SOC 2, HIPAA, and GDPR compliance for your startup. Start free.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -21,10 +29,10 @@
   --text: #fafafa;
   --text-muted: #71717a;
   --text-secondary: #a1a1aa;
-  --purple: #7c3aed;
-  --purple-light: #a78bfa;
-  --blue: #3b82f6;
-  --cyan: #06b6d4;
+  --primary: #2563eb;
+  --primary-light: #60a5fa;
+  --accent: #0ea5e9;
+  --accent-light: #38bdf8;
   --green: #22c55e;
   --radius: 12px;
 }
@@ -59,9 +67,9 @@ body {
   position: fixed; border-radius: 50%; filter: blur(100px);
   pointer-events: none; z-index: 0; opacity: 0.3;
 }
-.glow-1 { width:600px;height:600px; background:rgba(124,58,237,0.15); top:-200px; left:-100px; animation: orb-drift 12s ease-in-out infinite; }
-.glow-2 { width:500px;height:500px; background:rgba(59,130,246,0.1); bottom:-100px; right:-150px; animation: orb-drift 15s ease-in-out infinite reverse; }
-.glow-3 { width:300px;height:300px; background:rgba(6,182,212,0.08); top:50%; left:50%; animation: orb-drift 10s ease-in-out infinite; }
+.glow-1 { width:600px;height:600px; background:rgba(37,99,235,0.1); top:-200px; left:-100px; animation: orb-drift 12s ease-in-out infinite; }
+.glow-2 { width:500px;height:500px; background:rgba(14,165,233,0.08); bottom:-100px; right:-150px; animation: orb-drift 15s ease-in-out infinite reverse; }
+.glow-3 { width:300px;height:300px; background:rgba(6,182,212,0.06); top:50%; left:50%; animation: orb-drift 10s ease-in-out infinite; }
 
 @keyframes orb-drift {
   0%,100% { transform: translate(0,0) scale(1); }
@@ -78,7 +86,7 @@ nav {
   border-bottom: 1px solid var(--border);
 }
 .nav-logo { display:flex; align-items:center; gap:10px; font-size:17px; font-weight:800; text-decoration:none; color:white; letter-spacing:-0.5px; }
-.nav-logo-icon { width:30px;height:30px; border-radius:8px; background:linear-gradient(135deg,#7c3aed,#3b82f6); display:flex; align-items:center; justify-content:center; font-size:14px; }
+.nav-logo-icon { width:30px;height:30px; border-radius:8px; background:linear-gradient(135deg,#2563eb,#3b82f6); display:flex; align-items:center; justify-content:center; font-size:14px; }
 .nav-links { display:flex; align-items:center; gap:28px; list-style:none; }
 .nav-links a { color:var(--text-muted); text-decoration:none; font-size:13px; font-weight:500; transition:color 0.2s; }
 .nav-links a:hover { color:white; }
@@ -95,12 +103,12 @@ nav {
 }
 .shimmer-btn::before {
   content:''; position:absolute; inset:-1px; border-radius:8px; padding:1px;
-  background: conic-gradient(from var(--shimmer-angle,0deg), transparent 60%, #7c3aed 75%, #3b82f6 85%, transparent 100%);
+  background: conic-gradient(from var(--shimmer-angle,0deg), transparent 60%, #2563eb 75%, #3b82f6 85%, transparent 100%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor; mask-composite: exclude;
   animation: shimmer-rotate 3s linear infinite;
 }
-.shimmer-btn:hover { background:rgba(124,58,237,0.1); border-color:rgba(124,58,237,0.3); }
+.shimmer-btn:hover { background:rgba(37,99,235,0.1); border-color:rgba(37,99,235,0.3); }
 
 @property --shimmer-angle { syntax:'<angle>'; inherits:false; initial-value:0deg; }
 @keyframes shimmer-rotate { to { --shimmer-angle:360deg; } }
@@ -132,16 +140,16 @@ nav {
 /* ─── PILL BADGE ─── */
 .pill {
   display:inline-flex; align-items:center; gap:8px; padding:5px 14px 5px 8px;
-  background:rgba(124,58,237,0.08); border:1px solid rgba(124,58,237,0.2);
-  border-radius:100px; font-size:12px; font-weight:600; color:var(--purple-light);
+  background:rgba(37,99,235,0.08); border:1px solid rgba(37,99,235,0.2);
+  border-radius:100px; font-size:12px; font-weight:600; color:var(--primary-light);
   margin-bottom:28px;
 }
-.pill-icon { width:22px;height:22px; border-radius:50%; background:rgba(124,58,237,0.25); display:flex; align-items:center; justify-content:center; font-size:10px; }
-.pill-new { padding:2px 8px; background:linear-gradient(135deg,#7c3aed,#4f46e5); border-radius:100px; font-size:10px; font-weight:700; color:white; text-transform:uppercase; letter-spacing:0.5px; }
+.pill-icon { width:22px;height:22px; border-radius:50%; background:rgba(37,99,235,0.25); display:flex; align-items:center; justify-content:center; font-size:10px; }
+.pill-new { padding:2px 8px; background:linear-gradient(135deg,#2563eb,#1d4ed8); border-radius:100px; font-size:10px; font-weight:700; color:white; text-transform:uppercase; letter-spacing:0.5px; }
 
 /* ─── ANIMATED GRADIENT TEXT (MagicUI) ─── */
 .gradient-text {
-  background: linear-gradient(to right, #fff 20%, #a78bfa 40%, #60a5fa 60%, #fff 80%);
+  background: linear-gradient(to right, #fff 20%, #60a5fa 40%, #38bdf8 60%, #fff 80%);
   background-size: 200% auto;
   -webkit-background-clip:text; -webkit-text-fill-color:transparent;
   background-clip:text;
@@ -165,17 +173,17 @@ nav {
 
 .btn-primary {
   position:relative; padding:12px 24px; font-size:14px; font-weight:700;
-  color:white; background:linear-gradient(135deg,#7c3aed,#4f46e5); border:none;
+  color:white; background:linear-gradient(135deg,#2563eb,#1d4ed8); border:none;
   border-radius:10px; cursor:pointer; text-decoration:none; overflow:hidden;
   display:inline-flex; align-items:center; gap:8px; transition:all 0.25s;
-  box-shadow: 0 0 0 0 rgba(124,58,237,0);
+  box-shadow: 0 0 0 0 rgba(37,99,235,0);
 }
 .btn-primary::after {
   content:''; position:absolute; top:0; left:-100%; width:50%; height:100%;
   background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);
   animation: btn-shine 2.5s ease-in-out infinite;
 }
-.btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 32px rgba(124,58,237,0.5); }
+.btn-primary:hover { box-shadow:0 4px 20px rgba(37,99,235,0.35); }
 @keyframes btn-shine { 0%{left:-100%} 50%{left:150%} 100%{left:150%} }
 
 .btn-secondary {
@@ -190,11 +198,11 @@ nav {
 .avatar-stack { display:flex; }
 .av { width:28px;height:28px; border-radius:50%; border:2px solid var(--bg); margin-left:-6px; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:800; }
 .av:first-child { margin-left:0; }
-.av-1 { background:linear-gradient(135deg,#7c3aed,#a78bfa); }
+.av-1 { background:linear-gradient(135deg,#2563eb,#60a5fa); }
 .av-2 { background:linear-gradient(135deg,#3b82f6,#60a5fa); }
 .av-3 { background:linear-gradient(135deg,#059669,#10b981); }
 .av-4 { background:linear-gradient(135deg,#dc2626,#f97316); }
-.av-5 { background:linear-gradient(135deg,#7c3aed,#06b6d4); }
+.av-5 { background:linear-gradient(135deg,#2563eb,#06b6d4); }
 .social-text { font-size:12px; color:var(--text-muted); }
 .social-text strong { color:var(--text-secondary); }
 .stars { color:#f59e0b; font-size:11px; letter-spacing:1px; }
@@ -209,7 +217,7 @@ nav {
 /* Shine border on mockup */
 .hero-preview::before {
   content:''; position:absolute; inset:-1px; border-radius:16px; padding:1px;
-  background: conic-gradient(from var(--shimmer-angle,0deg), transparent 50%, rgba(124,58,237,0.6) 70%, rgba(59,130,246,0.6) 80%, transparent 100%);
+  background: conic-gradient(from var(--shimmer-angle,0deg), transparent 50%, rgba(37,99,235,0.6) 70%, rgba(59,130,246,0.6) 80%, transparent 100%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor; mask-composite: exclude;
   animation: shimmer-rotate 4s linear infinite;
@@ -238,7 +246,7 @@ nav {
 .mockup-content { display:grid; grid-template-columns:180px 1fr; gap:16px; min-height:320px; }
 .mockup-sidebar { display:flex; flex-direction:column; gap:6px; }
 .mockup-nav-item { padding:8px 12px; border-radius:6px; font-size:12px; color:var(--text-muted); display:flex; align-items:center; gap:8px; }
-.mockup-nav-item.active { background:rgba(124,58,237,0.15); color:var(--purple-light); }
+.mockup-nav-item.active { background:rgba(37,99,235,0.15); color:var(--primary-light); }
 .mockup-main { display:flex; flex-direction:column; gap:12px; }
 .mockup-stat-row { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
 .mockup-stat {
@@ -248,7 +256,7 @@ nav {
 .mockup-stat-label { font-size:10px; color:var(--text-muted); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px; }
 .mockup-stat-val { font-size:22px; font-weight:800; letter-spacing:-1px; }
 .mockup-stat-val.green { color:#22c55e; }
-.mockup-stat-val.purple { color:#a78bfa; }
+.mockup-stat-val.primary { color:#60a5fa; }
 .mockup-stat-val.blue { color:#60a5fa; }
 .mockup-chart {
   flex:1; border-radius:10px; background:rgba(255,255,255,0.02);
@@ -257,8 +265,8 @@ nav {
 }
 .mockup-chart-label { font-size:11px; color:var(--text-muted); margin-bottom:12px; }
 .chart-bars { display:flex; align-items:flex-end; gap:6px; height:100px; }
-.chart-bar { flex:1; border-radius:4px 4px 0 0; animation: bar-grow 1s ease both; }
-@keyframes bar-grow { from { height:0 !important; } }
+.chart-bar { flex:1; border-radius:4px 4px 0 0; height:0; transition: height 0.8s ease; }
+.hero-preview.visible .chart-bar { /* triggered when mockup fades in */ }
 
 /* ─── MARQUEE (MagicUI) ─── */
 .marquee-section {
@@ -274,7 +282,7 @@ nav {
   border:1px solid var(--border); border-radius:100px; background:rgba(255,255,255,0.02);
   font-size:13px; font-weight:600; color:var(--text-secondary); transition:all 0.2s;
 }
-.marquee-chip:hover { border-color:rgba(124,58,237,0.3); background:rgba(124,58,237,0.05); }
+.marquee-chip:hover { border-color:rgba(37,99,235,0.3); background:rgba(37,99,235,0.05); }
 .marquee-chip span { font-size:16px; }
 @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 
@@ -284,8 +292,8 @@ section { position:relative; z-index:1; }
 .section-header { text-align:center; margin-bottom:64px; }
 .section-tag {
   display:inline-flex; align-items:center; gap:6px; padding:4px 12px;
-  background:rgba(124,58,237,0.08); border:1px solid rgba(124,58,237,0.2);
-  border-radius:100px; font-size:11px; font-weight:600; color:var(--purple-light);
+  background:rgba(37,99,235,0.08); border:1px solid rgba(37,99,235,0.2);
+  border-radius:100px; font-size:11px; font-weight:600; color:var(--primary-light);
   text-transform:uppercase; letter-spacing:1.5px; margin-bottom:16px;
 }
 .section-title { font-size:clamp(30px,5vw,48px); font-weight:800; letter-spacing:-1.5px; line-height:1.1; margin-bottom:14px; }
@@ -302,18 +310,7 @@ section { position:relative; z-index:1; }
   background:var(--bg-card); border:1px solid var(--border);
   overflow:hidden; transition:all 0.4s;
 }
-.bento-card:hover { border-color:var(--border-hover); background:rgba(255,255,255,0.05); transform:translateY(-2px); }
-
-/* Border beam on hover */
-.bento-card::after {
-  content:''; position:absolute; inset:-1px; border-radius:16px; padding:1px;
-  background:conic-gradient(from var(--shimmer-angle,0deg), transparent 60%, rgba(124,58,237,0.6) 75%, rgba(59,130,246,0.5) 85%, transparent 100%);
-  -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude;
-  opacity:0; transition:opacity 0.4s;
-  animation:shimmer-rotate 3s linear infinite;
-}
-.bento-card:hover::after { opacity:1; }
+.bento-card:hover { border-color:var(--border-hover); background:rgba(255,255,255,0.04); }
 
 .bento-wide { grid-column:span 2; }
 .bento-tall { grid-row:span 2; }
@@ -322,7 +319,7 @@ section { position:relative; z-index:1; }
   width:40px;height:40px; border-radius:10px; display:flex; align-items:center;
   justify-content:center; font-size:18px; margin-bottom:14px;
 }
-.bento-icon.purple { background:rgba(124,58,237,0.12); border:1px solid rgba(124,58,237,0.2); }
+.bento-icon.primary { background:rgba(37,99,235,0.12); border:1px solid rgba(37,99,235,0.2); }
 .bento-icon.blue { background:rgba(59,130,246,0.12); border:1px solid rgba(59,130,246,0.2); }
 .bento-icon.green { background:rgba(34,197,94,0.12); border:1px solid rgba(34,197,94,0.2); }
 .bento-icon.cyan { background:rgba(6,182,212,0.12); border:1px solid rgba(6,182,212,0.2); }
@@ -336,7 +333,7 @@ section { position:relative; z-index:1; }
 .bento-tag { padding:3px 9px; border-radius:6px; font-size:11px; font-weight:600; }
 .bento-tag.green { background:rgba(34,197,94,0.1); border:1px solid rgba(34,197,94,0.15); color:#4ade80; }
 .bento-tag.blue { background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.15); color:#60a5fa; }
-.bento-tag.purple { background:rgba(124,58,237,0.1); border:1px solid rgba(124,58,237,0.15); color:#a78bfa; }
+.bento-tag.teal { background:rgba(14,165,233,0.1); border:1px solid rgba(14,165,233,0.15); color:#38bdf8; }
 
 /* ─── NUMBER TICKER (MagicUI) ─── */
 .stats-strip {
@@ -346,7 +343,7 @@ section { position:relative; z-index:1; }
 .stat-cell { background:var(--bg); padding:36px 20px; text-align:center; }
 .stat-num {
   font-size:44px; font-weight:900; letter-spacing:-2px; line-height:1;
-  background:linear-gradient(135deg,#fff 30%,var(--purple-light));
+  background:linear-gradient(135deg,#fff 30%,#60a5fa);
   -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
   margin-bottom:6px;
 }
@@ -359,11 +356,11 @@ section { position:relative; z-index:1; }
   background:var(--bg-card); border:1px solid var(--border); text-align:center;
   transition:all 0.3s;
 }
-.step-card:hover { border-color:var(--border-hover); transform:translateY(-3px); }
+.step-card:hover { border-color:var(--border-hover); }
 .step-num {
   width:48px;height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center;
-  margin:0 auto 18px; font-size:18px; font-weight:900; color:var(--purple-light);
-  background:rgba(124,58,237,0.1); border:1px solid rgba(124,58,237,0.25);
+  margin:0 auto 18px; font-size:18px; font-weight:900; color:var(--primary-light);
+  background:rgba(37,99,235,0.1); border:1px solid rgba(37,99,235,0.25);
 }
 .step-card h3 { font-size:16px; font-weight:700; margin-bottom:8px; letter-spacing:-0.3px; }
 .step-card p { font-size:13px; color:var(--text-muted); line-height:1.65; }
@@ -375,22 +372,22 @@ section { position:relative; z-index:1; }
   padding:32px; border-radius:20px; background:var(--bg-card); border:1px solid var(--border);
   position:relative; overflow:hidden; transition:all 0.3s;
 }
-.price-card:hover { transform:translateY(-3px); }
+.price-card:hover { border-color:var(--border-hover); }
 .price-card.pop {
-  background:rgba(124,58,237,0.06); border-color:rgba(124,58,237,0.3);
+  background:rgba(37,99,235,0.06); border-color:rgba(37,99,235,0.3);
   transform:scale(1.02);
 }
 .price-card.pop:hover { transform:scale(1.02) translateY(-3px); }
 /* Animated top border for popular */
 .price-card.pop::before {
   content:''; position:absolute; top:0; left:0; right:0; height:2px;
-  background:linear-gradient(90deg,transparent,#7c3aed,#3b82f6,transparent);
+  background:linear-gradient(90deg,transparent,#2563eb,#3b82f6,transparent);
   background-size:200%; animation:flow 3s linear infinite;
 }
 @keyframes flow { to{background-position:200%} }
 .pop-badge {
   position:absolute; top:14px; right:14px; padding:3px 10px; font-size:10px; font-weight:700;
-  background:linear-gradient(135deg,#7c3aed,#4f46e5); border-radius:100px; color:white;
+  background:linear-gradient(135deg,#2563eb,#1d4ed8); border-radius:100px; color:white;
   text-transform:uppercase; letter-spacing:0.8px;
 }
 .plan-label { font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:10px; }
@@ -411,7 +408,7 @@ section { position:relative; z-index:1; }
 .btn-plan-ghost { background:transparent; border:1px solid var(--border-hover); color:var(--text-secondary); }
 .btn-plan-ghost:hover { background:rgba(255,255,255,0.05); color:white; }
 .btn-plan-glow {
-  background:linear-gradient(135deg,#7c3aed,#4f46e5); border:none; color:white;
+  background:linear-gradient(135deg,#2563eb,#1d4ed8); border:none; color:white;
   position:relative; overflow:hidden;
 }
 .btn-plan-glow::after {
@@ -419,7 +416,7 @@ section { position:relative; z-index:1; }
   background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);
   animation:btn-shine 2.5s ease-in-out infinite;
 }
-.btn-plan-glow:hover { box-shadow:0 8px 30px rgba(124,58,237,0.5); }
+.btn-plan-glow:hover { box-shadow:0 8px 30px rgba(37,99,235,0.5); }
 
 /* ─── TESTIMONIALS ─── */
 .testimonials-cols { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
@@ -427,7 +424,7 @@ section { position:relative; z-index:1; }
   padding:24px; border-radius:14px; background:var(--bg-card); border:1px solid var(--border);
   transition:all 0.3s;
 }
-.testi-card:hover { border-color:var(--border-hover); transform:translateY(-2px); }
+.testi-card:hover { border-color:var(--border-hover); }
 .testi-stars { color:#f59e0b; font-size:12px; letter-spacing:1px; margin-bottom:12px; }
 .testi-text { font-size:13.5px; color:var(--text-secondary); line-height:1.7; margin-bottom:16px; }
 .testi-author { display:flex; align-items:center; gap:10px; }
@@ -440,19 +437,19 @@ section { position:relative; z-index:1; }
 .cta-box {
   position:relative; max-width:700px; margin:0 auto; padding:56px 40px;
   border-radius:24px; text-align:center; overflow:hidden;
-  background:rgba(124,58,237,0.04); border:1px solid rgba(124,58,237,0.2);
+  background:rgba(37,99,235,0.04); border:1px solid rgba(37,99,235,0.2);
 }
 /* Shine border */
 .cta-box::before {
   content:''; position:absolute; inset:-1px; border-radius:24px; padding:1px;
-  background: conic-gradient(from var(--shimmer-angle,0deg), transparent 40%, rgba(124,58,237,0.8) 55%, rgba(59,130,246,0.8) 65%, transparent 80%);
+  background: conic-gradient(from var(--shimmer-angle,0deg), transparent 40%, rgba(37,99,235,0.8) 55%, rgba(59,130,246,0.8) 65%, transparent 80%);
   -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite:xor; mask-composite:exclude;
   animation: shimmer-rotate 4s linear infinite;
 }
 .cta-glow {
   position:absolute; top:-60px; left:50%; transform:translateX(-50%);
-  width:350px;height:180px; background:radial-gradient(ellipse,rgba(124,58,237,0.25),transparent 70%);
+  width:350px;height:180px; background:radial-gradient(ellipse,rgba(37,99,235,0.25),transparent 70%);
   pointer-events:none;
 }
 .cta-box h2 { font-size:clamp(26px,4vw,40px); font-weight:900; letter-spacing:-1.5px; margin-bottom:14px; position:relative; }
@@ -496,7 +493,54 @@ footer {
   .cta-btns { flex-direction:column; }
   .mockup-content { grid-template-columns:1fr; }
   .mockup-sidebar { display:none; }
+  .pain-grid { grid-template-columns:1fr; }
+  .compare-table { font-size:12px; }
+  .compare-table th, .compare-table td { padding:10px 8px; }
+  .faq-grid { grid-template-columns:1fr; }
 }
+
+/* ─── PAIN SECTION ─── */
+.pain-grid {
+  display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:40px;
+}
+.pain-card {
+  padding:24px; border-radius:14px; background:rgba(239,68,68,0.04);
+  border:1px solid rgba(239,68,68,0.12); text-align:center; transition:all 0.3s;
+}
+.pain-card:hover { border-color:rgba(239,68,68,0.25); }
+.pain-icon { font-size:28px; margin-bottom:12px; }
+.pain-card h3 { font-size:15px; font-weight:700; margin-bottom:6px; color:#fca5a5; }
+.pain-card p { font-size:13px; color:var(--text-muted); line-height:1.6; }
+
+/* ─── COMPARE TABLE ─── */
+.compare-table {
+  width:100%; border-collapse:collapse; margin-top:40px; border-radius:16px; overflow:hidden;
+  border:1px solid var(--border);
+}
+.compare-table th, .compare-table td {
+  padding:14px 18px; text-align:left; font-size:13px;
+  border-bottom:1px solid var(--border);
+}
+.compare-table thead th { background:rgba(37,99,235,0.08); font-weight:700; font-size:12px; text-transform:uppercase; letter-spacing:1px; color:var(--text-secondary); }
+.compare-table tbody td { color:var(--text-muted); }
+.compare-table tbody td:first-child { color:var(--text); font-weight:600; }
+.compare-table .highlight-row td { background:rgba(37,99,235,0.06); color:var(--text); }
+.compare-table .highlight-row td:first-child { color:var(--primary-light); font-weight:800; }
+.compare-check { color:#22c55e; font-weight:700; }
+.compare-x { color:#ef4444; font-weight:700; }
+.compare-price { font-weight:700; }
+.compare-price.expensive { color:#ef4444; }
+.compare-price.cheap { color:#22c55e; }
+
+/* ─── FAQ ─── */
+.faq-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+.faq-item {
+  padding:24px; border-radius:14px; background:var(--bg-card);
+  border:1px solid var(--border); transition:all 0.3s;
+}
+.faq-item:hover { border-color:var(--border-hover); }
+.faq-item h3 { font-size:14px; font-weight:700; margin-bottom:8px; color:var(--text); }
+.faq-item p { font-size:13px; color:var(--text-muted); line-height:1.65; }
 </style>
 </head>
 <body>
@@ -512,10 +556,10 @@ footer {
 <nav>
   <a href="#" class="nav-logo"><div class="nav-logo-icon">⚡</div>ComplianceKit</a>
   <ul class="nav-links">
+    <li><a href="#compare">Compare</a></li>
     <li><a href="#features">Features</a></li>
-    <li><a href="#how">How it works</a></li>
     <li><a href="#pricing">Pricing</a></li>
-    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#faq">FAQ</a></li>
   </ul>
   <div class="nav-right">
     <a href="/app.html" class="btn-ghost">Sign in</a>
@@ -533,10 +577,10 @@ footer {
   </div>
 
   <h1 class="blur-fade d2">
-    Compliance on<br><span class="gradient-text">autopilot.</span>
+    Pass SOC 2 in weeks,<br><span class="gradient-text">not months.</span>
   </h1>
 
-  <p class="subtitle blur-fade d3">Stop drowning in audits. ComplianceKit automates SOC 2, HIPAA, and GDPR so you can focus on building your product.</p>
+  <p class="subtitle blur-fade d3">Other tools charge $10,000+/year. ComplianceKit gives you the same AI-powered SOC 2, HIPAA, and GDPR automation — starting at $49.99/mo. Built for startups that can't afford Vanta but can't afford to fail an audit.</p>
 
   <div class="hero-cta blur-fade d4">
     <a href="/app.html" class="btn-primary">Start free trial →</a>
@@ -544,16 +588,9 @@ footer {
   </div>
 
   <div class="social-row blur-fade d5">
-    <div class="avatar-stack">
-      <div class="av av-1">A</div>
-      <div class="av av-2">R</div>
-      <div class="av av-3">M</div>
-      <div class="av av-4">J</div>
-      <div class="av av-5">S</div>
-    </div>
     <div class="social-text">
-      <div class="stars">★★★★★</div>
-      <div>Trusted by <strong>500+</strong> businesses</div>
+      <div style="font-size:13px;color:var(--text-muted);">SOC 2 · HIPAA · GDPR · ISO 27001 · PCI DSS · CCPA</div>
+      <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">14-day free trial · No credit card required</div>
     </div>
   </div>
 
@@ -581,7 +618,7 @@ footer {
             </div>
             <div class="mockup-stat">
               <div class="mockup-stat-label">Controls Passed</div>
-              <div class="mockup-stat-val purple">47/52</div>
+              <div class="mockup-stat-val primary">47/52</div>
             </div>
             <div class="mockup-stat">
               <div class="mockup-stat-label">Evidence Items</div>
@@ -623,6 +660,60 @@ footer {
   </div>
 </div>
 
+<!-- ═══ PAIN POINTS ═══ -->
+<section>
+  <div class="section-inner">
+    <div class="section-header blur-fade">
+      <div class="section-tag">The Problem</div>
+      <h2 class="section-title">Compliance is <span class="gradient-text">broken</span> for startups</h2>
+      <p class="section-sub">Enterprise tools charge enterprise prices. You shouldn't need $10k+ to prove you're secure.</p>
+    </div>
+    <div class="pain-grid blur-fade">
+      <div class="pain-card">
+        <div class="pain-icon">💸</div>
+        <h3>$10,000–$50,000/yr</h3>
+        <p>That's what Vanta, Drata, and Secureframe charge. Before you even pay for the audit itself.</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">⏰</div>
+        <h3>3–6 months prep</h3>
+        <p>Manual evidence collection, writing policies from scratch, chasing teams for screenshots. It kills momentum.</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🧑‍💼</div>
+        <h3>Requires a GRC hire</h3>
+        <p>Most tools assume you have a compliance expert on staff. You have 8 engineers and a dream.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ COMPARE TABLE ═══ -->
+<section id="compare">
+  <div class="section-inner">
+    <div class="section-header blur-fade">
+      <div class="section-tag">Compare</div>
+      <h2 class="section-title">Same automation. <span class="gradient-text">10x less.</span></h2>
+      <p class="section-sub">We built ComplianceKit for teams that Vanta priced out.</p>
+    </div>
+    <table class="compare-table blur-fade">
+      <thead>
+        <tr><th>Feature</th><th>Vanta</th><th>Drata</th><th>Secureframe</th><th>ComplianceKit</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Starting price</td><td><span class="compare-price expensive">$10,000/yr</span></td><td><span class="compare-price expensive">$10,500/yr</span></td><td><span class="compare-price expensive">$7,500/yr</span></td><td><span class="compare-price cheap">$600/yr</span></td></tr>
+        <tr><td>AI evidence collection</td><td><span class="compare-check">✓</span></td><td><span class="compare-check">✓</span></td><td><span class="compare-check">✓</span></td><td><span class="compare-check">✓</span></td></tr>
+        <tr><td>Policy generator</td><td><span class="compare-check">✓</span></td><td><span class="compare-check">✓</span></td><td><span class="compare-check">✓</span></td><td><span class="compare-check">✓</span></td></tr>
+        <tr><td>Continuous monitoring</td><td><span class="compare-check">✓</span></td><td><span class="compare-check">✓</span></td><td><span class="compare-check">✓</span></td><td><span class="compare-check">✓</span></td></tr>
+        <tr><td>Multi-framework</td><td><span class="compare-check">✓</span></td><td><span class="compare-check">✓</span></td><td><span class="compare-check">✓</span></td><td><span class="compare-check">✓</span></td></tr>
+        <tr><td>No GRC expert needed</td><td><span class="compare-x">✗</span></td><td><span class="compare-x">✗</span></td><td><span class="compare-check">✓</span></td><td><span class="compare-check">✓</span></td></tr>
+        <tr><td>Free trial</td><td><span class="compare-x">✗</span></td><td><span class="compare-x">✗</span></td><td><span class="compare-x">✗</span></td><td><span class="compare-check">✓ 14 days</span></td></tr>
+        <tr class="highlight-row"><td>Best for</td><td>Enterprise</td><td>Mid-market</td><td>Growing teams</td><td>Startups & SMBs</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
 <!-- ═══ FEATURES (Bento Grid) ═══ -->
 <section id="features">
   <div class="section-inner">
@@ -634,13 +725,13 @@ footer {
 
     <div class="bento">
       <div class="bento-card bento-wide blur-fade">
-        <div class="bento-icon purple">🤖</div>
+        <div class="bento-icon primary">🤖</div>
         <h3>AI Control Monitoring</h3>
         <p>Continuously scans your infrastructure, code, and policies to detect compliance gaps before auditors do. Instant alerts with AI-generated remediation steps.</p>
         <div class="bento-tags">
           <span class="bento-tag green">24/7 monitoring</span>
           <span class="bento-tag blue">Auto-remediation</span>
-          <span class="bento-tag purple">Real-time alerts</span>
+          <span class="bento-tag teal">Real-time alerts</span>
         </div>
       </div>
       <div class="bento-card blur-fade">
@@ -665,10 +756,10 @@ footer {
         <div class="bento-tags">
           <span class="bento-tag blue">AWS</span>
           <span class="bento-tag green">GCP</span>
-          <span class="bento-tag purple">Azure</span>
+          <span class="bento-tag teal">Azure</span>
           <span class="bento-tag blue">GitHub</span>
           <span class="bento-tag green">Slack</span>
-          <span class="bento-tag purple">Jira</span>
+          <span class="bento-tag teal">Jira</span>
         </div>
       </div>
       <div class="bento-card blur-fade">
@@ -685,20 +776,20 @@ footer {
   <div class="section-inner" style="padding-top:0;">
     <div class="stats-strip blur-fade">
       <div class="stat-cell">
-        <div class="stat-num" data-target="87" data-suffix="%">0%</div>
-        <div class="stat-label">Faster audit prep</div>
+        <div class="stat-num" data-target="8" data-suffix="">0</div>
+        <div class="stat-label">Compliance frameworks</div>
       </div>
       <div class="stat-cell">
-        <div class="stat-num" data-target="40" data-prefix="$" data-suffix="k">$0k</div>
-        <div class="stat-label">Avg. savings vs consultants</div>
+        <div class="stat-num" data-target="100" data-suffix="+">0+</div>
+        <div class="stat-label">Cloud integrations</div>
       </div>
       <div class="stat-cell">
-        <div class="stat-num" data-target="500" data-suffix="+">0+</div>
-        <div class="stat-label">Businesses protected</div>
+        <div class="stat-num" data-target="6" data-suffix=" weeks">0 weeks</div>
+        <div class="stat-label">Avg. time to audit-ready</div>
       </div>
       <div class="stat-cell">
-        <div class="stat-num" data-target="99.9" data-suffix="%">0%</div>
-        <div class="stat-label">Uptime SLA</div>
+        <div class="stat-num" data-target="90" data-suffix="%">0%</div>
+        <div class="stat-label">Less than enterprise tools</div>
       </div>
     </div>
   </div>
@@ -797,63 +888,51 @@ footer {
   </div>
 </section>
 
-<!-- ═══ TESTIMONIALS ═══ -->
+<!-- ═══ TRUST / USE CASES ═══ -->
 <section id="reviews">
   <div class="section-inner">
     <div class="section-header blur-fade">
-      <div class="section-tag">Reviews</div>
-      <h2 class="section-title">Founders <span class="gradient-text">love it</span></h2>
-      <p class="section-sub">Real results from real teams.</p>
+      <div class="section-tag">Use Cases</div>
+      <h2 class="section-title">Built for teams <span class="gradient-text">like yours</span></h2>
+      <p class="section-sub">Real scenarios ComplianceKit handles every day.</p>
     </div>
 
     <div class="testimonials-cols blur-fade">
       <div class="testi-card">
-        <div class="testi-stars">★★★★★</div>
-        <p class="testi-text">"Passed SOC 2 Type II in 6 weeks. Our auditor said it was the most organized evidence package he'd seen from a startup."</p>
-        <div class="testi-author">
-          <div class="testi-av" style="background:linear-gradient(135deg,#7c3aed,#a78bfa)">M</div>
-          <div><div class="testi-name">Marcus Chen</div><div class="testi-role">CTO, DataLayer (YC W24)</div></div>
-        </div>
+        <div style="font-size:24px;margin-bottom:12px;">🏥</div>
+        <h3 style="font-size:14px;font-weight:700;margin-bottom:8px;">Healthtech Startup</h3>
+        <p class="testi-text">Your first enterprise customer asks for HIPAA compliance. ComplianceKit maps your infrastructure, generates policies, and gets you audit-ready in weeks — not months.</p>
+        <div style="margin-top:12px;"><span style="padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.15);color:#4ade80;">HIPAA</span></div>
       </div>
       <div class="testi-card">
-        <div class="testi-stars">★★★★★</div>
-        <p class="testi-text">"Was spending $8k/mo on a consultant. ComplianceKit replaced 90% of that at $99/mo. The ROI is insane."</p>
-        <div class="testi-author">
-          <div class="testi-av" style="background:linear-gradient(135deg,#059669,#10b981)">S</div>
-          <div><div class="testi-name">Sarah Kim</div><div class="testi-role">CEO, Healthflow</div></div>
-        </div>
+        <div style="font-size:24px;margin-bottom:12px;">🔐</div>
+        <h3 style="font-size:14px;font-weight:700;margin-bottom:8px;">B2B SaaS Company</h3>
+        <p class="testi-text">Enterprise deals are blocked because you don't have SOC 2. ComplianceKit auto-collects evidence from AWS, GitHub, and Jira so you can close those contracts.</p>
+        <div style="margin-top:12px;"><span style="padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;background:rgba(37,99,235,0.1);border:1px solid rgba(37,99,235,0.15);color:#60a5fa;">SOC 2</span></div>
       </div>
       <div class="testi-card">
-        <div class="testi-stars">★★★★★</div>
-        <p class="testi-text">"GDPR mapped our entire data processing in hours and auto-generated all our DPAs. Game changer for our EU expansion."</p>
-        <div class="testi-author">
-          <div class="testi-av" style="background:linear-gradient(135deg,#dc2626,#f97316)">A</div>
-          <div><div class="testi-name">Alex Rivera</div><div class="testi-role">Head of Eng, Fintrail</div></div>
-        </div>
+        <div style="font-size:24px;margin-bottom:12px;">🇪🇺</div>
+        <h3 style="font-size:14px;font-weight:700;margin-bottom:8px;">Expanding to EU</h3>
+        <p class="testi-text">You're launching in Europe and need GDPR compliance yesterday. ComplianceKit maps your data processing, generates DPAs, and builds your privacy framework automatically.</p>
+        <div style="margin-top:12px;"><span style="padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;background:rgba(14,165,233,0.1);border:1px solid rgba(14,165,233,0.15);color:#38bdf8;">GDPR</span></div>
       </div>
       <div class="testi-card">
-        <div class="testi-stars">★★★★★</div>
-        <p class="testi-text">"Policy generator alone is worth the sub. What took our lawyers 3 days now takes 10 minutes."</p>
-        <div class="testi-author">
-          <div class="testi-av" style="background:linear-gradient(135deg,#0284c7,#0ea5e9)">J</div>
-          <div><div class="testi-name">Jordan Patel</div><div class="testi-role">Founder, CloudVault</div></div>
-        </div>
+        <div style="font-size:24px;margin-bottom:12px;">💳</div>
+        <h3 style="font-size:14px;font-weight:700;margin-bottom:8px;">Fintech Platform</h3>
+        <p class="testi-text">PCI DSS is non-negotiable when you handle payments. ComplianceKit monitors your controls 24/7 and flags gaps before your assessor does.</p>
+        <div style="margin-top:12px;"><span style="padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.15);color:#fb923c;">PCI DSS</span></div>
       </div>
       <div class="testi-card">
-        <div class="testi-stars">★★★★★</div>
-        <p class="testi-text">"Enterprise customers were blocking deals without SOC 2. Got certified in 2 months. Unlocked $400k in contracts."</p>
-        <div class="testi-author">
-          <div class="testi-av" style="background:linear-gradient(135deg,#7c3aed,#a855f7)">R</div>
-          <div><div class="testi-name">Rachel Torres</div><div class="testi-role">CEO, Stackform</div></div>
-        </div>
+        <div style="font-size:24px;margin-bottom:12px;">📊</div>
+        <h3 style="font-size:14px;font-weight:700;margin-bottom:8px;">Series A Fundraising</h3>
+        <p class="testi-text">Investors want to see security posture. ComplianceKit gives you a clean dashboard and exportable reports that prove you take security seriously.</p>
+        <div style="margin-top:12px;"><span style="padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;background:rgba(37,99,235,0.1);border:1px solid rgba(37,99,235,0.15);color:#60a5fa;">ISO 27001</span></div>
       </div>
       <div class="testi-card">
-        <div class="testi-stars">★★★★★</div>
-        <p class="testi-text">"HIPAA was terrifying. ComplianceKit made it manageable. Continuous monitoring means we're always audit-ready."</p>
-        <div class="testi-author">
-          <div class="testi-av" style="background:linear-gradient(135deg,#0f766e,#14b8a6)">D</div>
-          <div><div class="testi-name">David Park</div><div class="testi-role">CTO, MedTrack</div></div>
-        </div>
+        <div style="font-size:24px;margin-bottom:12px;">⚡</div>
+        <h3 style="font-size:14px;font-weight:700;margin-bottom:8px;">Replacing a Consultant</h3>
+        <p class="testi-text">You're paying $5k–$10k/month for a compliance consultant doing work that AI can automate. ComplianceKit does it for $49.99/mo with better coverage.</p>
+        <div style="margin-top:12px;"><span style="padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.15);color:#4ade80;">All Frameworks</span></div>
       </div>
     </div>
   </div>
@@ -864,10 +943,10 @@ footer {
   <div class="cta-box blur-fade">
     <div class="cta-glow"></div>
     <h2>Ready to stop worrying about <span class="gradient-text">compliance?</span></h2>
-    <p>Join 500+ businesses that passed their audits with ComplianceKit.</p>
+    <p>14-day free trial. No credit card. Cancel anytime.</p>
     <div class="cta-btns">
       <a href="/app.html" class="btn-primary" style="font-size:15px;padding:14px 28px;">Start free trial →</a>
-      <a href="#" class="btn-secondary" style="font-size:15px;padding:14px 28px;">Book a demo</a>
+      <a href="#pricing" class="btn-secondary" style="font-size:15px;padding:14px 28px;">View pricing</a>
     </div>
     <div class="cta-note">
       <span>✓ No credit card</span>
@@ -876,6 +955,42 @@ footer {
     </div>
   </div>
 </div>
+
+<!-- ═══ FAQ ═══ -->
+<section id="faq">
+  <div class="section-inner">
+    <div class="section-header blur-fade">
+      <div class="section-tag">FAQ</div>
+      <h2 class="section-title">Questions? <span class="gradient-text">Answers.</span></h2>
+    </div>
+    <div class="faq-grid blur-fade">
+      <div class="faq-item">
+        <h3>How is ComplianceKit so much cheaper than Vanta?</h3>
+        <p>We built lean. No bloated sales team, no enterprise overhead. We automate the same workflows but pass the savings to you. Simple.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Can I actually pass a SOC 2 audit with this?</h3>
+        <p>Yes. ComplianceKit generates audit-ready evidence packages, policies, and reports that auditors accept. We automate what used to take consultants months.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Do I need a compliance expert on my team?</h3>
+        <p>No. ComplianceKit is built for founders and engineers. The AI guides you through every control, generates policies in your voice, and tells you exactly what to fix.</p>
+      </div>
+      <div class="faq-item">
+        <h3>What frameworks do you support?</h3>
+        <p>SOC 2 Type I & II, HIPAA, GDPR, ISO 27001, PCI DSS, CCPA, NIST CSF, and FedRAMP. More added quarterly.</p>
+      </div>
+      <div class="faq-item">
+        <h3>How long does it take to get audit-ready?</h3>
+        <p>Most teams are audit-ready in 2–6 weeks, depending on the framework and how much existing security infrastructure you have.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Is there a free trial?</h3>
+        <p>14 days, full access, no credit card required. Cancel anytime. If you're not audit-ready faster, you pay nothing.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- ═══ FOOTER ═══ -->
 <footer>
@@ -886,15 +1001,15 @@ footer {
     </div>
     <div class="footer-col">
       <h4>Product</h4>
-      <ul><li><a href="#features">Features</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#">Integrations</a></li><li><a href="#">Changelog</a></li></ul>
+      <ul><li><a href="#features">Features</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#features">Integrations</a></li><li><a href="/app.html">Dashboard</a></li></ul>
     </div>
     <div class="footer-col">
       <h4>Frameworks</h4>
-      <ul><li><a href="#">SOC 2</a></li><li><a href="#">HIPAA</a></li><li><a href="#">GDPR</a></li><li><a href="#">ISO 27001</a></li></ul>
+      <ul><li><a href="/app.html">SOC 2</a></li><li><a href="/app.html">HIPAA</a></li><li><a href="/app.html">GDPR</a></li><li><a href="/app.html">ISO 27001</a></li></ul>
     </div>
     <div class="footer-col">
       <h4>Company</h4>
-      <ul><li><a href="#">About</a></li><li><a href="#">Blog</a></li><li><a href="#">Privacy</a></li><li><a href="#">Terms</a></li></ul>
+      <ul><li><a href="#reviews">About</a></li><li><a href="#features">Blog</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Service</a></li></ul>
     </div>
   </div>
   <div class="footer-bottom">
@@ -928,7 +1043,7 @@ footer {
     }
     draw() {
       ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
-      ctx.fillStyle=`rgba(167,139,250,${this.a})`; ctx.fill();
+      ctx.fillStyle=`rgba(96,165,250,${this.a})`; ctx.fill();
     }
   }
 
@@ -944,7 +1059,7 @@ footer {
         if(dist<120) {
           ctx.beginPath(); ctx.moveTo(particles[i].x,particles[i].y);
           ctx.lineTo(particles[j].x,particles[j].y);
-          ctx.strokeStyle=`rgba(124,58,237,${0.06*(1-dist/120)})`;
+          ctx.strokeStyle=`rgba(37,99,235,${0.06*(1-dist/120)})`;
           ctx.lineWidth=0.5; ctx.stroke();
         }
       }
@@ -988,18 +1103,34 @@ const tickerObs = new IntersectionObserver((entries)=>{
 },{threshold:0.5});
 statNums.forEach(el=>tickerObs.observe(el));
 
-// ─── CHART BARS ───
+// ─── CHART BARS (animate on visibility) ───
 (function(){
   const container=document.getElementById('chartBars');
   if(!container) return;
   const heights=[45,58,52,68,74,82,78,88,84,91,87,94];
+  const bars=[];
   heights.forEach((h,i)=>{
     const bar=document.createElement('div');
     bar.className='chart-bar';
-    const hue=h>80?'rgba(34,197,94,':'rgba(124,58,237,';
-    bar.style.cssText=`height:${h}%;background:${hue}0.6);animation-delay:${i*0.08}s;`;
+    const hue=h>80?'rgba(34,197,94,':'rgba(37,99,235,';
+    bar.style.cssText=`background:${hue}0.6);transition-delay:${i*0.06}s;`;
+    bar.dataset.h=h;
     container.appendChild(bar);
+    bars.push(bar);
   });
+  // Trigger bar growth after hero-preview becomes visible
+  const preview=document.querySelector('.hero-preview');
+  if(preview){
+    const obs=new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          setTimeout(()=>{bars.forEach(b=>{b.style.height=b.dataset.h+'%';});},400);
+          obs.unobserve(e.target);
+        }
+      });
+    },{threshold:0.2});
+    obs.observe(preview);
+  }
 })();
 
 // ─── ACTIVE NAV LINK ───
