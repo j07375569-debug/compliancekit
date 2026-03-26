@@ -1,0 +1,2320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ComplianceKit — AI-Powered Compliance Autopilot</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ============================================ */
+/* RESET & VARIABLES                           */
+/* ============================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --bg-card: #12121a;
+  --bg-card-hover: #1a1a26;
+  --bg-sidebar: #0d0d14;
+  --bg-input: #1a1a26;
+  --border: #1e1e2e;
+  --border-hover: #2a2a3e;
+  --text: #e4e4e7;
+  --text-secondary: #9393a8;
+  --text-muted: #5f5f78;
+  --primary: #6366f1;
+  --primary-hover: #7577f5;
+  --primary-bg: rgba(99,102,241,0.1);
+  --success: #10b981;
+  --success-bg: rgba(16,185,129,0.1);
+  --warning: #f59e0b;
+  --warning-bg: rgba(245,158,11,0.1);
+  --danger: #ef4444;
+  --danger-bg: rgba(239,68,68,0.1);
+  --info: #3b82f6;
+  --info-bg: rgba(59,130,246,0.1);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-lg: 16px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.3);
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --transition: 0.2s ease;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================ */
+/* SCROLLBAR                                    */
+/* ============================================ */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-hover); }
+
+/* ============================================ */
+/* LAYOUT                                       */
+/* ============================================ */
+.app-layout { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 260px;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 100;
+  transition: transform var(--transition);
+}
+
+.main-content {
+  flex: 1;
+  margin-left: 260px;
+  min-height: 100vh;
+}
+
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px;
+}
+
+/* ============================================ */
+/* SIDEBAR                                      */
+/* ============================================ */
+.sidebar-logo {
+  padding: 24px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sidebar-logo-icon {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--primary), #8b5cf6);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 800;
+  color: white;
+}
+
+.sidebar-logo-text {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.sidebar-nav { padding: 16px 12px; flex: 1; }
+
+.nav-section {
+  margin-bottom: 24px;
+}
+
+.nav-section-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  padding: 0 8px;
+  margin-bottom: 8px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 2px;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+
+.nav-item:hover { background: var(--bg-card); color: var(--text); }
+.nav-item.active { background: var(--primary-bg); color: var(--primary); }
+
+.nav-item-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.nav-badge {
+  margin-left: auto;
+  background: var(--danger);
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 10px;
+  min-width: 20px;
+  text-align: center;
+}
+
+.sidebar-footer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #6366f1, #ec4899);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: white;
+}
+
+.user-details { flex: 1; }
+.user-name { font-size: 13px; font-weight: 600; }
+.user-role { font-size: 11px; color: var(--text-muted); }
+
+/* ============================================ */
+/* PAGE HEADERS                                 */
+/* ============================================ */
+.page-header {
+  margin-bottom: 32px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 4px;
+}
+
+.page-subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* ============================================ */
+/* CARDS                                        */
+/* ============================================ */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  transition: all var(--transition);
+}
+
+.card:hover { border-color: var(--border-hover); }
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.card-title {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* ============================================ */
+/* STATS GRID                                   */
+/* ============================================ */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  transition: all var(--transition);
+}
+
+.stat-card:hover { border-color: var(--border-hover); transform: translateY(-1px); }
+
+.stat-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  line-height: 1;
+}
+
+.stat-suffix {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-left: 2px;
+}
+
+.stat-change {
+  font-size: 12px;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ============================================ */
+/* SCORE RING                                   */
+/* ============================================ */
+.score-ring-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.score-ring {
+  transform: rotate(-90deg);
+}
+
+.score-ring-bg {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 8;
+}
+
+.score-ring-fill {
+  fill: none;
+  stroke-width: 8;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s ease;
+}
+
+.score-ring-text {
+  position: absolute;
+  text-align: center;
+}
+
+.score-ring-value {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.score-ring-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ============================================ */
+/* FRAMEWORK CARDS                              */
+/* ============================================ */
+.framework-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.framework-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.framework-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(99,102,241,0.1);
+}
+
+.framework-card-header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.framework-badge {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.progress-bar-bg {
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 12px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 1s ease;
+}
+
+.control-stats {
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.control-stat {
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.control-stat-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* ============================================ */
+/* CONTROLS TABLE                               */
+/* ============================================ */
+.controls-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.controls-table th {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+}
+
+.controls-table td {
+  padding: 14px 16px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.controls-table tr:hover td { background: var(--bg-card-hover); }
+
+.control-id-cell {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+/* ============================================ */
+/* STATUS BADGES                                */
+/* ============================================ */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-compliant { background: var(--success-bg); color: var(--success); }
+.status-in_progress { background: var(--warning-bg); color: var(--warning); }
+.status-non_compliant { background: var(--danger-bg); color: var(--danger); }
+.status-not_started { background: rgba(100,100,130,0.1); color: var(--text-muted); }
+.status-pending { background: var(--info-bg); color: var(--info); }
+.status-approved { background: var(--success-bg); color: var(--success); }
+.status-draft { background: var(--warning-bg); color: var(--warning); }
+
+.severity-critical { background: var(--danger-bg); color: var(--danger); }
+.severity-high { background: var(--warning-bg); color: var(--warning); }
+.severity-medium { background: var(--info-bg); color: var(--info); }
+.severity-low { background: rgba(100,100,130,0.1); color: var(--text-muted); }
+
+/* ============================================ */
+/* BUTTONS                                      */
+/* ============================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+}
+.btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+
+.btn-secondary {
+  background: var(--bg-input);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { border-color: var(--border-hover); background: var(--bg-card-hover); }
+
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+.btn-ghost { background: none; color: var(--text-secondary); padding: 6px 10px; }
+.btn-ghost:hover { color: var(--text); background: var(--bg-card); }
+
+/* ============================================ */
+/* ALERTS                                       */
+/* ============================================ */
+.alert-item {
+  display: flex;
+  align-items: start;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  transition: all var(--transition);
+  cursor: pointer;
+}
+
+.alert-item:hover { border-color: var(--border-hover); background: var(--bg-card-hover); }
+.alert-item.unread { border-left: 3px solid var(--primary); }
+
+.alert-icon { font-size: 20px; margin-top: 2px; }
+.alert-content { flex: 1; }
+.alert-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.alert-summary { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+.alert-meta { font-size: 11px; color: var(--text-muted); margin-top: 6px; display: flex; gap: 12px; }
+
+/* ============================================ */
+/* EVIDENCE LIST                                */
+/* ============================================ */
+.evidence-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  transition: all var(--transition);
+}
+
+.evidence-item:hover { border-color: var(--border-hover); }
+
+.evidence-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.evidence-info { flex: 1; }
+.evidence-title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+.evidence-desc { font-size: 12px; color: var(--text-secondary); }
+.evidence-meta { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+/* ============================================ */
+/* POLICY VIEWER                                */
+/* ============================================ */
+.policy-content {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 32px;
+  font-size: 14px;
+  line-height: 1.8;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.policy-content h1 { font-size: 24px; font-weight: 700; margin: 0 0 16px 0; }
+.policy-content h2 { font-size: 18px; font-weight: 700; margin: 24px 0 12px 0; color: var(--primary); }
+.policy-content h3 { font-size: 15px; font-weight: 600; margin: 16px 0 8px 0; }
+.policy-content ul, .policy-content ol { padding-left: 24px; margin: 8px 0; }
+.policy-content li { margin: 4px 0; }
+.policy-content table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+.policy-content th, .policy-content td { padding: 8px 12px; border: 1px solid var(--border); font-size: 13px; text-align: left; }
+.policy-content th { background: var(--bg-card); font-weight: 600; }
+.policy-content em { color: var(--text-muted); }
+.policy-content strong { color: var(--text); }
+
+/* ============================================ */
+/* FORMS                                        */
+/* ============================================ */
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-family: var(--font);
+  color: var(--text);
+  transition: border-color var(--transition);
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.form-select { cursor: pointer; }
+.form-textarea { resize: vertical; min-height: 100px; }
+
+/* ============================================ */
+/* MODAL                                        */
+/* ============================================ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  width: 90%;
+  max-width: 560px;
+  max-height: 80vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.modal-title { font-size: 20px; font-weight: 700; }
+
+.modal-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.modal-close:hover { background: var(--border); color: var(--text); }
+
+.modal-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+/* ============================================ */
+/* ACTIVITY FEED                                */
+/* ============================================ */
+.activity-item {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.activity-item:last-child { border-bottom: none; }
+
+.activity-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+.activity-text { font-size: 13px; color: var(--text-secondary); }
+.activity-time { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+/* ============================================ */
+/* GRID LAYOUTS                                 */
+/* ============================================ */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+.grid-dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+
+/* ============================================ */
+/* LANDING PAGE                                 */
+/* ============================================ */
+.landing {
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.landing-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 48px;
+  border-bottom: 1px solid var(--border);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.landing-hero {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 100px 48px 80px;
+  text-align: center;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  background: var(--primary-bg);
+  border: 1px solid rgba(99,102,241,0.2);
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 24px;
+}
+
+.hero-title {
+  font-size: 56px;
+  font-weight: 900;
+  letter-spacing: -2px;
+  line-height: 1.1;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #fff 0%, #e4e4e7 50%, #9393a8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-subtitle {
+  font-size: 18px;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto 36px;
+  line-height: 1.7;
+}
+
+.hero-cta {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.hero-cta .btn-primary {
+  padding: 14px 32px;
+  font-size: 15px;
+  border-radius: 10px;
+}
+
+.hero-cta .btn-secondary {
+  padding: 14px 32px;
+  font-size: 15px;
+  border-radius: 10px;
+}
+
+.landing-features {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 48px 100px;
+}
+
+.features-title {
+  text-align: center;
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 48px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.feature-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  transition: all var(--transition);
+}
+
+.feature-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(99,102,241,0.1);
+}
+
+.feature-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 16px;
+}
+
+.feature-title {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.feature-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.landing-pricing {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 48px 100px;
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.pricing-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  position: relative;
+  transition: all var(--transition);
+}
+
+.pricing-card.popular {
+  border-color: var(--primary);
+  box-shadow: 0 0 40px rgba(99,102,241,0.15);
+}
+
+.pricing-popular-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 16px;
+  border-radius: 100px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.pricing-name { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+.pricing-desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; }
+.pricing-price { font-size: 42px; font-weight: 900; letter-spacing: -2px; }
+.pricing-period { font-size: 14px; color: var(--text-muted); font-weight: 400; }
+
+.pricing-features {
+  list-style: none;
+  margin: 20px 0;
+  padding: 0;
+}
+
+.pricing-features li {
+  padding: 6px 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pricing-features li::before {
+  content: '✓';
+  color: var(--success);
+  font-weight: 700;
+}
+
+.comparison-section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 48px 100px;
+  text-align: center;
+}
+
+.comparison-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 32px;
+  text-align: left;
+}
+
+.comparison-table th {
+  padding: 14px 20px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+}
+
+.comparison-table td {
+  padding: 14px 20px;
+  font-size: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.comparison-table tr:hover td { background: var(--bg-card); }
+
+/* ============================================ */
+/* TABS                                         */
+/* ============================================ */
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0;
+}
+
+.tab {
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: var(--font);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all var(--transition);
+}
+
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+/* ============================================ */
+/* EMPTY STATE                                  */
+/* ============================================ */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+}
+
+.empty-state-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
+.empty-state-title { font-size: 18px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; }
+.empty-state-desc { font-size: 14px; max-width: 400px; margin: 0 auto; }
+
+/* ============================================ */
+/* ANIMATIONS                                   */
+/* ============================================ */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+.loading { animation: pulse 1.5s infinite; }
+
+/* ============================================ */
+/* RESPONSIVE                                   */
+/* ============================================ */
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .main-content { margin-left: 0; }
+  .page-container { padding: 20px; }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .framework-grid { grid-template-columns: 1fr; }
+  .grid-2, .grid-3, .grid-dashboard { grid-template-columns: 1fr; }
+  .features-grid { grid-template-columns: 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .hero-title { font-size: 36px; }
+  .landing-nav { padding: 16px 20px; }
+  .landing-hero { padding: 60px 20px 40px; }
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useCallback, useMemo, useRef } = React;
+
+// ============================================
+// API LAYER
+// ============================================
+window.CK_API_URL = 'https://web-production-be130.up.railway.app';
+const API = (window.CK_API_URL || '') + '/api';
+const api = {
+  get: async (path) => {
+    const res = await fetch(`${API}${path}`);
+    return res.json();
+  },
+  post: async (path, body) => {
+    const res = await fetch(`${API}${path}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    return res.json();
+  },
+  put: async (path, body) => {
+    const res = await fetch(`${API}${path}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    return res.json();
+  },
+  del: async (path) => {
+    const res = await fetch(`${API}${path}`, { method: 'DELETE' });
+    return res.json();
+  },
+};
+
+// ============================================
+// UTILITY FUNCTIONS
+// ============================================
+function getScoreColor(score) {
+  if (score >= 80) return 'var(--success)';
+  if (score >= 60) return 'var(--warning)';
+  return 'var(--danger)';
+}
+
+function getStatusLabel(status) {
+  const labels = {
+    compliant: 'Compliant',
+    in_progress: 'In Progress',
+    non_compliant: 'Non-Compliant',
+    not_started: 'Not Started',
+    pending: 'Pending Review',
+    approved: 'Approved',
+    rejected: 'Rejected',
+    draft: 'Draft',
+  };
+  return labels[status] || status;
+}
+
+function getActionIcon(action) {
+  const icons = {
+    evidence_uploaded: '📎',
+    control_updated: '✅',
+    policy_generated: '📄',
+    framework_added: '🛡️',
+    alert_received: '🔔',
+    evidence_approved: '✓',
+    report_generated: '📊',
+  };
+  return icons[action] || '•';
+}
+
+function getActionColor(action) {
+  const colors = {
+    evidence_uploaded: 'var(--info)',
+    control_updated: 'var(--success)',
+    policy_generated: 'var(--primary)',
+    framework_added: 'var(--primary)',
+    alert_received: 'var(--warning)',
+    evidence_approved: 'var(--success)',
+    report_generated: 'var(--info)',
+  };
+  return colors[action] || 'var(--text-muted)';
+}
+
+function getEvidenceIcon(type) {
+  const icons = {
+    screenshot: '🖼️',
+    document: '📄',
+    config: '⚙️',
+    certificate: '🎓',
+    policy: '📋',
+    report: '📊',
+    assessment: '🔍',
+    contract: '📝',
+    log: '📒',
+  };
+  return icons[type] || '📎';
+}
+
+function simpleMarkdown(text) {
+  if (!text) return '';
+  let html = text
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>')
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/\n/g, '<br>');
+  if (!html.startsWith('<')) html = '<p>' + html + '</p>';
+  // Simple table support
+  html = html.replace(/\|(.+)\|/g, (match) => {
+    const cells = match.split('|').filter(c => c.trim());
+    if (cells.some(c => /^[-:]+$/.test(c.trim()))) return '';
+    return '<tr>' + cells.map(c => `<td>${c.trim()}</td>`).join('') + '</tr>';
+  });
+  return html;
+}
+
+function timeAgo(dateStr) {
+  const now = new Date();
+  const date = new Date(dateStr);
+  const diff = Math.floor((now - date) / 1000);
+  if (diff < 60) return 'just now';
+  if (diff < 3600) return `${Math.floor(diff/60)}m ago`;
+  if (diff < 86400) return `${Math.floor(diff/3600)}h ago`;
+  return `${Math.floor(diff/86400)}d ago`;
+}
+
+// ============================================
+// SCORE RING COMPONENT
+// ============================================
+function ScoreRing({ score, size = 140, strokeWidth = 8, label = "Compliance" }) {
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (score / 100) * circumference;
+  const color = getScoreColor(score);
+
+  return (
+    <div className="score-ring-container" style={{ width: size, height: size }}>
+      <svg className="score-ring" width={size} height={size}>
+        <circle className="score-ring-bg" cx={size/2} cy={size/2} r={radius} />
+        <circle
+          className="score-ring-fill"
+          cx={size/2} cy={size/2} r={radius}
+          stroke={color}
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+        />
+      </svg>
+      <div className="score-ring-text">
+        <div className="score-ring-value" style={{ color }}>{score}%</div>
+        <div className="score-ring-label">{label}</div>
+      </div>
+    </div>
+  );
+}
+
+// ============================================
+// MODAL COMPONENT
+// ============================================
+function Modal({ title, onClose, children }) {
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal" onClick={e => e.stopPropagation()}>
+        <div className="modal-header">
+          <h2 className="modal-title">{title}</h2>
+          <button className="modal-close" onClick={onClose}>×</button>
+        </div>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+// ============================================
+// LANDING PAGE
+// ============================================
+function LandingPage({ onEnterApp }) {
+  return (
+    <div className="landing">
+      <nav className="landing-nav">
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div className="sidebar-logo-icon">C</div>
+          <span style={{ fontSize: 18, fontWeight: 700 }}>ComplianceKit</span>
+        </div>
+        <div style={{ display: 'flex', gap: 12 }}>
+          <button className="btn btn-ghost" onClick={() => document.getElementById('features')?.scrollIntoView({behavior:'smooth'})}>Features</button>
+          <button className="btn btn-ghost" onClick={() => document.getElementById('pricing')?.scrollIntoView({behavior:'smooth'})}>Pricing</button>
+          <button className="btn btn-primary" onClick={onEnterApp}>Open Dashboard →</button>
+        </div>
+      </nav>
+
+      <section className="landing-hero">
+        <div className="hero-badge">🚀 Built for small businesses, priced for humans</div>
+        <h1 className="hero-title">Compliance on autopilot.<br/>Not on spreadsheets.</h1>
+        <p className="hero-subtitle">
+          ComplianceKit replaces your fragile spreadsheet system, $150/hr consultants, and sleepless audit nights with AI-powered compliance management that costs less than your team lunch.
+        </p>
+        <div className="hero-cta">
+          <button className="btn btn-primary" onClick={onEnterApp}>Start Free Trial →</button>
+          <button className="btn btn-secondary" onClick={() => document.getElementById('features')?.scrollIntoView({behavior:'smooth'})}>See How It Works</button>
+        </div>
+        <div style={{ marginTop: 20, fontSize: 13, color: 'var(--text-muted)' }}>
+          No credit card required · SOC 2, HIPAA, GDPR · Setup in 30 minutes
+        </div>
+      </section>
+
+      <section className="landing-features" id="features">
+        <h2 className="features-title">Everything you need. Nothing you don't.</h2>
+        <div className="features-grid">
+          {[
+            { icon: '📡', bg: 'var(--primary-bg)', title: 'Regulatory Radar', desc: 'AI monitors regulatory changes relevant to your industry and geography. Know about changes before they hit, not after the fine.' },
+            { icon: '📎', bg: 'var(--success-bg)', title: 'Smart Evidence Collection', desc: 'Connects to your tools and automatically gathers compliance evidence. Eliminates the 20-40 hour manual collection grind.' },
+            { icon: '📊', bg: 'var(--info-bg)', title: 'Compliance Dashboard', desc: 'One screen shows your real-time compliance posture across every framework. No more guessing where you stand.' },
+            { icon: '🤖', bg: 'var(--warning-bg)', title: 'AI Policy Generator', desc: 'Input your business context, get tailored policies in minutes. Not generic templates — documents that match your operations.' },
+            { icon: '📑', bg: 'var(--danger-bg)', title: 'Audit-Ready Exports', desc: 'One-click PDF reports your auditor, insurance company, or enterprise customer can actually use. Instant credibility.' },
+            { icon: '🔔', bg: 'rgba(168,85,247,0.1)', title: 'Smart Notifications', desc: '"This regulatory change affects YOUR business because..." — context-aware alerts that tell you what to do, not just what happened.' },
+          ].map((f, i) => (
+            <div className="feature-card" key={i}>
+              <div className="feature-icon" style={{ background: f.bg }}>{f.icon}</div>
+              <div className="feature-title">{f.title}</div>
+              <div className="feature-desc">{f.desc}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="comparison-section">
+        <h2 className="features-title">Why ComplianceKit wins</h2>
+        <table className="comparison-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th style={{color:'var(--primary)'}}>ComplianceKit</th>
+              <th>Vanta / Drata</th>
+              <th>Spreadsheets</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              ['Price', '$49–149/mo', '$10K–80K/yr', 'Free + your sanity'],
+              ['Setup Time', '30 minutes', '2–4 weeks', 'Ongoing forever'],
+              ['AI Monitoring', '✓', '✓', '✗'],
+              ['Built for SMB', '✓', '✗ (enterprise-first)', 'N/A'],
+              ['Expertise Required', 'None', 'Moderate', 'High'],
+              ['Self-Serve', '✓', '✗ (sales-led)', '✓'],
+            ].map(([label, ck, ent, ss], i) => (
+              <tr key={i}>
+                <td style={{fontWeight:600}}>{label}</td>
+                <td style={{color:'var(--success)'}}>{ck}</td>
+                <td>{ent}</td>
+                <td style={{color:'var(--text-muted)'}}>{ss}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+
+      <section className="landing-pricing" id="pricing">
+        <h2 className="features-title">Simple, honest pricing</h2>
+        <div className="pricing-grid">
+          {[
+            {
+              name: 'Starter', desc: 'For solo founders and micro-businesses', price: 49,
+              features: ['1 compliance framework', 'Basic regulatory monitoring', 'Manual evidence collection', 'Audit-ready PDF exports', 'Email support'],
+            },
+            {
+              name: 'Growth', desc: 'The sweet spot for growing teams', price: 99, popular: true,
+              features: ['Up to 3 frameworks', 'AI evidence auto-collection', 'AI policy generator', 'Priority regulatory alerts', '10 tool integrations', 'Slack support'],
+            },
+            {
+              name: 'Pro', desc: 'For companies approaching enterprise', price: 149,
+              features: ['Unlimited frameworks', 'Full automation suite', 'Custom integrations', 'White-label audit reports', 'Dedicated account manager', 'SSO & API access'],
+            },
+          ].map((plan, i) => (
+            <div className={`pricing-card ${plan.popular ? 'popular' : ''}`} key={i}>
+              {plan.popular && <div className="pricing-popular-badge">Most Popular</div>}
+              <div className="pricing-name">{plan.name}</div>
+              <div className="pricing-desc">{plan.desc}</div>
+              <div style={{margin:'16px 0'}}>
+                <span className="pricing-price">${plan.price}</span>
+                <span className="pricing-period">/month</span>
+              </div>
+              <button className="btn btn-primary" style={{width:'100%',justifyContent:'center'}} onClick={onEnterApp}>
+                Start Free Trial
+              </button>
+              <ul className="pricing-features">
+                {plan.features.map((f, j) => <li key={j}>{f}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <footer style={{ textAlign: 'center', padding: '40px', borderTop: '1px solid var(--border)', color: 'var(--text-muted)', fontSize: 13 }}>
+        ComplianceKit © 2026 · Built with AI, for humans who hate spreadsheets.
+      </footer>
+    </div>
+  );
+}
+
+// ============================================
+// DASHBOARD PAGE
+// ============================================
+function DashboardPage({ dashboard, onNavigate }) {
+  if (!dashboard) return <div className="loading" style={{padding:40}}>Loading dashboard...</div>;
+
+  return (
+    <div>
+      <div className="page-header">
+        <div className="page-title">Dashboard</div>
+        <div className="page-subtitle">Welcome back, Jordan. Here's your compliance overview.</div>
+      </div>
+
+      <div className="stats-grid">
+        <div className="stat-card">
+          <div className="stat-label">Overall Score</div>
+          <div className="stat-value" style={{color: getScoreColor(dashboard.overall_score)}}>
+            {dashboard.overall_score}<span className="stat-suffix">%</span>
+          </div>
+          <div className="stat-change" style={{color:'var(--success)'}}>↑ Across all frameworks</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-label">Active Frameworks</div>
+          <div className="stat-value">{dashboard.frameworks?.length || 0}</div>
+          <div className="stat-change" style={{color:'var(--text-muted)'}}>SOC 2, GDPR active</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-label">Evidence Items</div>
+          <div className="stat-value">{dashboard.evidence?.total || 0}</div>
+          <div className="stat-change" style={{color:'var(--success)'}}>{dashboard.evidence?.approved || 0} approved</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-label">Regulatory Alerts</div>
+          <div className="stat-value" style={{color: dashboard.unread_alerts > 0 ? 'var(--danger)' : 'var(--text)'}}>
+            {dashboard.unread_alerts}
+          </div>
+          <div className="stat-change" style={{color:'var(--danger)'}}>Unread alerts</div>
+        </div>
+      </div>
+
+      <div className="grid-dashboard">
+        <div>
+          <div className="card">
+            <div className="card-header">
+              <div className="card-title">Framework Compliance</div>
+              <button className="btn btn-sm btn-secondary" onClick={() => onNavigate('frameworks')}>View All</button>
+            </div>
+            {dashboard.frameworks?.map(fw => (
+              <div key={fw.id} style={{marginBottom:16, cursor:'pointer'}} onClick={() => onNavigate('frameworks')}>
+                <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:6}}>
+                  <span style={{fontWeight:600, fontSize:14}}>{fw.short_name}</span>
+                  <span style={{fontWeight:700, color: getScoreColor(fw.score)}}>{fw.score}%</span>
+                </div>
+                <div className="progress-bar-bg">
+                  <div className="progress-bar-fill" style={{width:`${fw.score}%`, background: getScoreColor(fw.score)}} />
+                </div>
+                <div className="control-stats">
+                  <div className="control-stat">
+                    <span className="control-stat-dot" style={{background:'var(--success)'}} />
+                    <span>{fw.compliant} compliant</span>
+                  </div>
+                  <div className="control-stat">
+                    <span className="control-stat-dot" style={{background:'var(--warning)'}} />
+                    <span>{fw.in_progress} in progress</span>
+                  </div>
+                  <div className="control-stat">
+                    <span className="control-stat-dot" style={{background:'var(--danger)'}} />
+                    <span>{fw.non_compliant} gaps</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <div className="card">
+            <div className="card-header">
+              <div className="card-title">Critical Alerts</div>
+              <button className="btn btn-sm btn-secondary" onClick={() => onNavigate('alerts')}>View All</button>
+            </div>
+            {dashboard.critical_alerts?.length === 0 && (
+              <div style={{color:'var(--text-muted)', fontSize:13, textAlign:'center', padding:20}}>No critical alerts</div>
+            )}
+            {dashboard.critical_alerts?.slice(0, 3).map(alert => (
+              <div key={alert.id} className="alert-item unread" style={{background:'none', border:'none', borderBottom:'1px solid var(--border)', borderRadius:0, borderLeft:'3px solid var(--danger)', marginBottom:0}}>
+                <div className="alert-content">
+                  <div className="alert-title">{alert.title}</div>
+                  <div className="alert-meta">
+                    <span className={`status-badge severity-${alert.severity}`}>{alert.severity}</span>
+                    <span>{alert.source}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="card" style={{marginTop:16}}>
+            <div className="card-header">
+              <div className="card-title">Recent Activity</div>
+            </div>
+            {dashboard.recent_activity?.slice(0, 6).map(act => (
+              <div key={act.id} className="activity-item">
+                <div className="activity-dot" style={{background: getActionColor(act.action)}} />
+                <div>
+                  <div className="activity-text">{act.details}</div>
+                  <div className="activity-time">{timeAgo(act.created_at)}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ============================================
+// FRAMEWORKS PAGE
+// ============================================
+function FrameworksPage() {
+  const [frameworks, setFrameworks] = useState([]);
+  const [selectedFw, setSelectedFw] = useState(null);
+  const [controls, setControls] = useState([]);
+  const [filter, setFilter] = useState('all');
+  const [editingControl, setEditingControl] = useState(null);
+
+  useEffect(() => { api.get('/frameworks').then(setFrameworks); }, []);
+
+  const loadControls = async (fwId) => {
+    setSelectedFw(fwId);
+    const data = await api.get(`/frameworks/${fwId}/controls`);
+    setControls(data);
+  };
+
+  const updateStatus = async (controlId, status) => {
+    await api.post(`/controls/${controlId}/status`, { status });
+    loadControls(selectedFw);
+    setEditingControl(null);
+  };
+
+  const subscribeFw = async (fwId) => {
+    await api.post(`/frameworks/${fwId}/subscribe`);
+    const data = await api.get('/frameworks');
+    setFrameworks(data);
+  };
+
+  const filtered = filter === 'all' ? controls : controls.filter(c => (c.compliance_status || 'not_started') === filter);
+
+  if (selectedFw) {
+    const fw = frameworks.find(f => f.id === selectedFw);
+    const stats = {
+      total: controls.length,
+      compliant: controls.filter(c => c.compliance_status === 'compliant').length,
+      in_progress: controls.filter(c => c.compliance_status === 'in_progress').length,
+      non_compliant: controls.filter(c => c.compliance_status === 'non_compliant').length,
+      not_started: controls.filter(c => !c.compliance_status || c.compliance_status === 'not_started').length,
+    };
+    const score = stats.total > 0 ? Math.round(stats.compliant / stats.total * 100) : 0;
+
+    return (
+      <div>
+        <div className="page-header">
+          <button className="btn btn-ghost" onClick={() => { setSelectedFw(null); setControls([]); }}>← Back to Frameworks</button>
+          <div style={{display:'flex', alignItems:'center', gap:20, marginTop:12}}>
+            <ScoreRing score={score} size={100} label="Score" />
+            <div>
+              <div className="page-title">{fw?.name}</div>
+              <div className="page-subtitle">{fw?.description}</div>
+              <div className="control-stats" style={{marginTop:8}}>
+                <span className="control-stat"><span className="control-stat-dot" style={{background:'var(--success)'}} /> {stats.compliant} Compliant</span>
+                <span className="control-stat"><span className="control-stat-dot" style={{background:'var(--warning)'}} /> {stats.in_progress} In Progress</span>
+                <span className="control-stat"><span className="control-stat-dot" style={{background:'var(--danger)'}} /> {stats.non_compliant} Non-Compliant</span>
+                <span className="control-stat"><span className="control-stat-dot" style={{background:'var(--text-muted)'}} /> {stats.not_started} Not Started</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="tabs">
+          {['all','compliant','in_progress','non_compliant','not_started'].map(f => (
+            <button key={f} className={`tab ${filter === f ? 'active' : ''}`} onClick={() => setFilter(f)}>
+              {f === 'all' ? `All (${controls.length})` : `${getStatusLabel(f)} (${stats[f]})`}
+            </button>
+          ))}
+        </div>
+
+        <div className="card" style={{padding:0, overflow:'hidden'}}>
+          <table className="controls-table">
+            <thead>
+              <tr>
+                <th style={{width:'10%'}}>ID</th>
+                <th style={{width:'30%'}}>Control</th>
+                <th style={{width:'15%'}}>Category</th>
+                <th style={{width:'10%'}}>Severity</th>
+                <th style={{width:'12%'}}>Status</th>
+                <th style={{width:'8%'}}>Evidence</th>
+                <th style={{width:'15%'}}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map(ctrl => (
+                <tr key={ctrl.id}>
+                  <td className="control-id-cell">{ctrl.control_id}</td>
+                  <td>
+                    <div style={{fontWeight:600, fontSize:13, marginBottom:2}}>{ctrl.title}</div>
+                    <div style={{fontSize:12, color:'var(--text-secondary)'}}>{ctrl.description}</div>
+                  </td>
+                  <td style={{fontSize:12}}>{ctrl.category}</td>
+                  <td><span className={`status-badge severity-${ctrl.severity}`}>{ctrl.severity}</span></td>
+                  <td>
+                    <span className={`status-badge status-${ctrl.compliance_status || 'not_started'}`}>
+                      {getStatusLabel(ctrl.compliance_status || 'not_started')}
+                    </span>
+                  </td>
+                  <td style={{textAlign:'center'}}>{ctrl.evidence_count || 0}</td>
+                  <td>
+                    <select
+                      className="form-select"
+                      style={{padding:'4px 8px', fontSize:12}}
+                      value={ctrl.compliance_status || 'not_started'}
+                      onChange={(e) => updateStatus(ctrl.id, e.target.value)}
+                    >
+                      <option value="not_started">Not Started</option>
+                      <option value="in_progress">In Progress</option>
+                      <option value="compliant">Compliant</option>
+                      <option value="non_compliant">Non-Compliant</option>
+                    </select>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div className="page-header">
+        <div className="page-title">Compliance Frameworks</div>
+        <div className="page-subtitle">Manage your regulatory compliance across multiple frameworks.</div>
+      </div>
+
+      <div className="framework-grid">
+        {frameworks.map(fw => {
+          const categoryColors = {
+            Security: { bg: 'var(--primary-bg)', color: 'var(--primary)' },
+            Healthcare: { bg: 'var(--success-bg)', color: 'var(--success)' },
+            Privacy: { bg: 'var(--warning-bg)', color: 'var(--warning)' },
+          };
+          const color = categoryColors[fw.category] || { bg: 'var(--info-bg)', color: 'var(--info)' };
+
+          return (
+            <div key={fw.id} className="framework-card" onClick={() => fw.subscribed && loadControls(fw.id)}>
+              <div className="framework-card-header">
+                <div>
+                  <div style={{fontSize:20, fontWeight:700, marginBottom:4}}>{fw.short_name}</div>
+                  <div style={{fontSize:13, color:'var(--text-secondary)'}}>{fw.name}</div>
+                </div>
+                <span className="framework-badge" style={{background: color.bg, color: color.color}}>
+                  {fw.category}
+                </span>
+              </div>
+              <div style={{fontSize:13, color:'var(--text-secondary)', marginBottom:12}}>{fw.description?.slice(0, 100)}...</div>
+              <div style={{fontSize:13, color:'var(--text-muted)'}}>
+                {fw.total_controls} controls · Version {fw.version}
+              </div>
+              {fw.subscribed ? (
+                <div style={{marginTop:12}}>
+                  <span className="status-badge status-compliant">Active</span>
+                </div>
+              ) : (
+                <button className="btn btn-primary btn-sm" style={{marginTop:12}} onClick={(e) => { e.stopPropagation(); subscribeFw(fw.id); }}>
+                  Activate Framework
+                </button>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ============================================
+// EVIDENCE PAGE
+// ============================================
+function EvidencePage() {
+  const [evidence, setEvidence] = useState([]);
+  const [showAdd, setShowAdd] = useState(false);
+  const [form, setForm] = useState({ title: '', description: '', type: 'document', source: '', control_id: '' });
+  const [controls, setControls] = useState([]);
+
+  useEffect(() => {
+    api.get('/evidence').then(setEvidence);
+    api.get('/frameworks/soc2/controls').then(setControls);
+  }, []);
+
+  const addEvidence = async () => {
+    await api.post('/evidence', form);
+    const data = await api.get('/evidence');
+    setEvidence(data);
+    setShowAdd(false);
+    setForm({ title: '', description: '', type: 'document', source: '', control_id: '' });
+  };
+
+  return (
+    <div>
+      <div className="page-header" style={{display:'flex', justifyContent:'space-between', alignItems:'start'}}>
+        <div>
+          <div className="page-title">Evidence Library</div>
+          <div className="page-subtitle">Manage compliance evidence across all frameworks.</div>
+        </div>
+        <button className="btn btn-primary" onClick={() => setShowAdd(true)}>+ Add Evidence</button>
+      </div>
+
+      <div className="stats-grid">
+        <div className="stat-card">
+          <div className="stat-label">Total Evidence</div>
+          <div className="stat-value">{evidence.length}</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-label">Approved</div>
+          <div className="stat-value" style={{color:'var(--success)'}}>{evidence.filter(e => e.status === 'approved').length}</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-label">Pending Review</div>
+          <div className="stat-value" style={{color:'var(--warning)'}}>{evidence.filter(e => e.status === 'pending').length}</div>
+        </div>
+      </div>
+
+      <div className="card" style={{padding:0}}>
+        {evidence.map(ev => (
+          <div key={ev.id} className="evidence-item" style={{margin:0, borderRadius:0, borderLeft:'none', borderRight:'none', borderTop:'none'}}>
+            <div className="evidence-icon" style={{background: ev.status === 'approved' ? 'var(--success-bg)' : 'var(--info-bg)'}}>
+              {getEvidenceIcon(ev.type)}
+            </div>
+            <div className="evidence-info">
+              <div className="evidence-title">{ev.title}</div>
+              <div className="evidence-desc">{ev.description}</div>
+              <div className="evidence-meta">
+                {ev.control_ref && <span>Control: {ev.control_ref}</span>}
+                {ev.source && <span> · Source: {ev.source}</span>}
+                {ev.uploaded_at && <span> · {timeAgo(ev.uploaded_at)}</span>}
+              </div>
+            </div>
+            <span className={`status-badge status-${ev.status}`}>{getStatusLabel(ev.status)}</span>
+          </div>
+        ))}
+      </div>
+
+      {showAdd && (
+        <Modal title="Add Evidence" onClose={() => setShowAdd(false)}>
+          <div className="form-group">
+            <label className="form-label">Title</label>
+            <input className="form-input" value={form.title} onChange={e => setForm({...form, title: e.target.value})} placeholder="e.g., MFA Configuration Screenshot" />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Description</label>
+            <textarea className="form-textarea" value={form.description} onChange={e => setForm({...form, description: e.target.value})} placeholder="Describe this evidence..." />
+          </div>
+          <div className="grid-2">
+            <div className="form-group">
+              <label className="form-label">Type</label>
+              <select className="form-select" value={form.type} onChange={e => setForm({...form, type: e.target.value})}>
+                <option value="document">Document</option>
+                <option value="screenshot">Screenshot</option>
+                <option value="config">Configuration</option>
+                <option value="certificate">Certificate</option>
+                <option value="policy">Policy</option>
+                <option value="report">Report</option>
+                <option value="log">Log</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label className="form-label">Source</label>
+              <input className="form-input" value={form.source} onChange={e => setForm({...form, source: e.target.value})} placeholder="e.g., AWS Console" />
+            </div>
+          </div>
+          <div className="form-group">
+            <label className="form-label">Linked Control</label>
+            <select className="form-select" value={form.control_id} onChange={e => setForm({...form, control_id: e.target.value})}>
+              <option value="">Select a control...</option>
+              {controls.map(c => <option key={c.id} value={c.id}>{c.control_id} - {c.title}</option>)}
+            </select>
+          </div>
+          <div className="modal-actions">
+            <button className="btn btn-secondary" onClick={() => setShowAdd(false)}>Cancel</button>
+            <button className="btn btn-primary" onClick={addEvidence} disabled={!form.title}>Add Evidence</button>
+          </div>
+        </Modal>
+      )}
+    </div>
+  );
+}
+
+// ============================================
+// ALERTS PAGE
+// ============================================
+function AlertsPage() {
+  const [alerts, setAlerts] = useState([]);
+  const [selected, setSelected] = useState(null);
+
+  useEffect(() => { api.get('/alerts').then(setAlerts); }, []);
+
+  const markRead = async (id) => {
+    await api.post(`/alerts/${id}/read`);
+    setAlerts(alerts.map(a => a.id === id ? {...a, is_read: 1} : a));
+  };
+
+  const severityIcon = { critical: '🔴', high: '🟠', medium: '🟡', info: '🔵' };
+
+  return (
+    <div>
+      <div className="page-header">
+        <div className="page-title">Regulatory Radar</div>
+        <div className="page-subtitle">AI-monitored regulatory changes affecting your compliance posture.</div>
+      </div>
+
+      <div className="stats-grid">
+        <div className="stat-card">
+          <div className="stat-label">Total Alerts</div>
+          <div className="stat-value">{alerts.length}</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-label">Unread</div>
+          <div className="stat-value" style={{color:'var(--danger)'}}>{alerts.filter(a => !a.is_read).length}</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-label">Critical</div>
+          <div className="stat-value" style={{color:'var(--danger)'}}>{alerts.filter(a => a.severity === 'critical').length}</div>
+        </div>
+      </div>
+
+      {alerts.map(alert => (
+        <div key={alert.id} className={`alert-item ${!alert.is_read ? 'unread' : ''}`} onClick={() => { setSelected(alert); markRead(alert.id); }}>
+          <div className="alert-icon">{severityIcon[alert.severity] || '🔵'}</div>
+          <div className="alert-content">
+            <div className="alert-title">{alert.title}</div>
+            <div className="alert-summary">{alert.summary}</div>
+            <div className="alert-meta">
+              <span className={`status-badge severity-${alert.severity}`}>{alert.severity}</span>
+              <span>{alert.source}</span>
+              <span>{timeAgo(alert.published_at)}</span>
+            </div>
+          </div>
+        </div>
+      ))}
+
+      {selected && (
+        <Modal title={selected.title} onClose={() => setSelected(null)}>
+          <div style={{marginBottom:12}}>
+            <span className={`status-badge severity-${selected.severity}`}>{selected.severity}</span>
+            <span style={{marginLeft:8, fontSize:13, color:'var(--text-muted)'}}>Source: {selected.source}</span>
+          </div>
+          <p style={{fontSize:14, lineHeight:1.7, color:'var(--text-secondary)', marginBottom:16}}>{selected.summary}</p>
+          <div style={{fontSize:13, color:'var(--text-muted)'}}>
+            <strong>Frameworks Affected:</strong> {JSON.parse(selected.frameworks_affected || '[]').join(', ').toUpperCase()}
+          </div>
+          <div style={{fontSize:13, color:'var(--text-muted)', marginTop:4}}>
+            <strong>Industries:</strong> {JSON.parse(selected.industries_affected || '[]').join(', ')}
+          </div>
+        </Modal>
+      )}
+    </div>
+  );
+}
+
+// ============================================
+// POLICIES PAGE
+// ============================================
+function PoliciesPage() {
+  const [policies, setPolicies] = useState([]);
+  const [selected, setSelected] = useState(null);
+  const [generating, setGenerating] = useState(false);
+  const [showGenerate, setShowGenerate] = useState(false);
+  const [genType, setGenType] = useState('Acceptable Use Policy');
+
+  useEffect(() => { api.get('/policies').then(setPolicies); }, []);
+
+  const generatePolicy = async () => {
+    setGenerating(true);
+    const result = await api.post('/policies/generate', { type: genType });
+    const data = await api.get('/policies');
+    setPolicies(data);
+    setShowGenerate(false);
+    setGenerating(false);
+  };
+
+  const policyTypes = [
+    'Acceptable Use Policy',
+    'Incident Response Plan',
+    'Data Classification Policy',
+    'Vendor Management Policy',
+    'Access Control Policy',
+  ];
+
+  return (
+    <div>
+      <div className="page-header" style={{display:'flex', justifyContent:'space-between', alignItems:'start'}}>
+        <div>
+          <div className="page-title">Policy Center</div>
+          <div className="page-subtitle">AI-generated policies tailored to your business.</div>
+        </div>
+        <button className="btn btn-primary" onClick={() => setShowGenerate(true)}>🤖 Generate Policy</button>
+      </div>
+
+      <div className="framework-grid">
+        {policies.map(p => (
+          <div key={p.id} className="framework-card" onClick={() => setSelected(p)}>
+            <div className="framework-card-header">
+              <div style={{fontSize:16, fontWeight:700}}>{p.title}</div>
+              <span className={`status-badge status-${p.status}`}>{getStatusLabel(p.status)}</span>
+            </div>
+            <div style={{fontSize:13, color:'var(--text-muted)', marginTop:8}}>
+              Version {p.version} · Updated {timeAgo(p.updated_at)}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {policies.length === 0 && (
+        <div className="empty-state">
+          <div className="empty-state-icon">📄</div>
+          <div className="empty-state-title">No policies yet</div>
+          <div className="empty-state-desc">Generate your first AI-powered compliance policy in seconds.</div>
+        </div>
+      )}
+
+      {selected && (
+        <Modal title={selected.title} onClose={() => setSelected(null)}>
+          <div style={{display:'flex', gap:8, marginBottom:16}}>
+            <span className={`status-badge status-${selected.status}`}>{getStatusLabel(selected.status)}</span>
+            <span style={{fontSize:12, color:'var(--text-muted)', lineHeight:'24px'}}>v{selected.version}</span>
+          </div>
+          <div className="policy-content" dangerouslySetInnerHTML={{__html: simpleMarkdown(selected.content)}} />
+          <div className="modal-actions">
+            <button className="btn btn-secondary" onClick={() => setSelected(null)}>Close</button>
+            <button className="btn btn-primary" onClick={async () => {
+              await api.put(`/policies/${selected.id}`, {...selected, status: 'approved'});
+              const data = await api.get('/policies');
+              setPolicies(data);
+              setSelected(null);
+            }}>Approve Policy</button>
+          </div>
+        </Modal>
+      )}
+
+      {showGenerate && (
+        <Modal title="Generate AI Policy" onClose={() => setShowGenerate(false)}>
+          <div className="form-group">
+            <label className="form-label">Policy Type</label>
+            <select className="form-select" value={genType} onChange={e => setGenType(e.target.value)}>
+              {policyTypes.map(t => <option key={t} value={t}>{t}</option>)}
+            </select>
+          </div>
+          <p style={{fontSize:13, color:'var(--text-secondary)', marginBottom:16}}>
+            AI will generate a comprehensive policy document tailored to your organization's industry and compliance requirements.
+          </p>
+          <div className="modal-actions">
+            <button className="btn btn-secondary" onClick={() => setShowGenerate(false)}>Cancel</button>
+            <button className="btn btn-primary" onClick={generatePolicy} disabled={generating}>
+              {generating ? 'Generating...' : '🤖 Generate Policy'}
+            </button>
+          </div>
+        </Modal>
+      )}
+    </div>
+  );
+}
+
+// ============================================
+// REPORTS PAGE
+// ============================================
+function ReportsPage() {
+  const [frameworks, setFrameworks] = useState([]);
+  const [report, setReport] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => { api.get('/frameworks').then(setFrameworks); }, []);
+
+  const generateReport = async (fwId) => {
+    setLoading(true);
+    const data = await api.get(`/reports/compliance/${fwId}`);
+    setReport(data);
+    setLoading(false);
+  };
+
+  if (report) {
+    const fw = report.framework;
+    const stats = {
+      total: report.controls.length,
+      compliant: report.controls.filter(c => c.compliance_status === 'compliant').length,
+      in_progress: report.controls.filter(c => c.compliance_status === 'in_progress').length,
+      non_compliant: report.controls.filter(c => c.compliance_status === 'non_compliant').length,
+      not_started: report.controls.filter(c => !c.compliance_status || c.compliance_status === 'not_started').length,
+    };
+    const score = stats.total > 0 ? Math.round(stats.compliant / stats.total * 100) : 0;
+
+    const categories = [...new Set(report.controls.map(c => c.category))];
+
+    return (
+      <div>
+        <div className="page-header">
+          <button className="btn btn-ghost" onClick={() => setReport(null)}>← Back to Reports</button>
+          <div className="page-title" style={{marginTop:8}}>{fw.name} — Compliance Report</div>
+          <div className="page-subtitle">Generated {new Date(report.generated_at).toLocaleDateString()} for {report.org.name}</div>
+        </div>
+
+        <div className="stats-grid">
+          <div className="stat-card">
+            <div className="stat-label">Overall Score</div>
+            <div className="stat-value" style={{color:getScoreColor(score)}}>{score}%</div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-label">Controls Compliant</div>
+            <div className="stat-value" style={{color:'var(--success)'}}>{stats.compliant}/{stats.total}</div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-label">Evidence Items</div>
+            <div className="stat-value">{report.evidence.length}</div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-label">Gaps</div>
+            <div className="stat-value" style={{color:'var(--danger)'}}>{stats.non_compliant}</div>
+          </div>
+        </div>
+
+        {categories.map(cat => {
+          const catControls = report.controls.filter(c => c.category === cat);
+          return (
+            <div key={cat} className="card" style={{marginBottom:16}}>
+              <div className="card-header">
+                <div className="card-title">{cat}</div>
+                <span style={{fontSize:12, color:'var(--text-muted)'}}>
+                  {catControls.filter(c => c.compliance_status === 'compliant').length}/{catControls.length} compliant
+                </span>
+              </div>
+              {catControls.map(ctrl => (
+                <div key={ctrl.id} style={{display:'flex', alignItems:'center', justifyContent:'space-between', padding:'10px 0', borderBottom:'1px solid var(--border)'}}>
+                  <div style={{flex:1}}>
+                    <span style={{fontFamily:'monospace', fontSize:12, color:'var(--primary)', marginRight:8}}>{ctrl.control_id}</span>
+                    <span style={{fontSize:13, fontWeight:500}}>{ctrl.title}</span>
+                  </div>
+                  <span className={`status-badge status-${ctrl.compliance_status || 'not_started'}`}>
+                    {getStatusLabel(ctrl.compliance_status || 'not_started')}
+                  </span>
+                </div>
+              ))}
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div className="page-header">
+        <div className="page-title">Audit Reports</div>
+        <div className="page-subtitle">Generate audit-ready compliance reports for any framework.</div>
+      </div>
+
+      <div className="framework-grid">
+        {frameworks.filter(f => f.subscribed).map(fw => (
+          <div key={fw.id} className="framework-card" onClick={() => generateReport(fw.id)}>
+            <div style={{fontSize:18, fontWeight:700, marginBottom:8}}>{fw.short_name} Report</div>
+            <div style={{fontSize:13, color:'var(--text-secondary)', marginBottom:16}}>{fw.name}</div>
+            <button className="btn btn-primary btn-sm">
+              {loading ? 'Generating...' : '📊 Generate Report'}
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {frameworks.filter(f => f.subscribed).length === 0 && (
+        <div className="empty-state">
+          <div className="empty-state-icon">📊</div>
+          <div className="empty-state-title">No active frameworks</div>
+          <div className="empty-state-desc">Activate a compliance framework first to generate reports.</div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ============================================
+// SETTINGS PAGE
+// ============================================
+function SettingsPage() {
+  return (
+    <div>
+      <div className="page-header">
+        <div className="page-title">Settings</div>
+        <div className="page-subtitle">Manage your organization and account settings.</div>
+      </div>
+
+      <div className="grid-2">
+        <div className="card">
+          <div className="card-title" style={{marginBottom:16}}>Organization</div>
+          <div className="form-group">
+            <label className="form-label">Company Name</label>
+            <input className="form-input" defaultValue="Acme SaaS Co." />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Industry</label>
+            <select className="form-select" defaultValue="saas">
+              <option value="saas">SaaS / Software</option>
+              <option value="healthcare">Healthcare</option>
+              <option value="fintech">Fintech</option>
+              <option value="ecommerce">E-Commerce</option>
+              <option value="professional_services">Professional Services</option>
+            </select>
+          </div>
+          <div className="form-group">
+            <label className="form-label">Company Size</label>
+            <select className="form-select" defaultValue="11-25">
+              <option value="1-5">1-5 employees</option>
+              <option value="6-10">6-10 employees</option>
+              <option value="11-25">11-25 employees</option>
+              <option value="26-50">26-50 employees</option>
+            </select>
+          </div>
+          <button className="btn btn-primary">Save Changes</button>
+        </div>
+
+        <div className="card">
+          <div className="card-title" style={{marginBottom:16}}>Account</div>
+          <div className="form-group">
+            <label className="form-label">Full Name</label>
+            <input className="form-input" defaultValue="Jordan Chen" />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Email</label>
+            <input className="form-input" defaultValue="admin@acmesaas.com" />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Role</label>
+            <input className="form-input" value="Admin" disabled style={{opacity:0.6}} />
+          </div>
+          <button className="btn btn-primary">Update Profile</button>
+        </div>
+      </div>
+
+      <div className="card" style={{marginTop:16}}>
+        <div className="card-title" style={{marginBottom:16}}>Billing</div>
+        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+          <div>
+            <div style={{fontSize:15, fontWeight:600}}>Growth Plan — $99/month</div>
+            <div style={{fontSize:13, color:'var(--text-secondary)'}}>Up to 3 frameworks, AI policy generator, 10 integrations</div>
+          </div>
+          <button className="btn btn-secondary">Manage Billing</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ============================================
+// BILLING PAGE
+// ============================================
+function BillingPage() {
+  const [plans, setPlans] = useState([]);
+  const [subscription, setSubscription] = useState(null);
+  const [loading, setLoading] = useState(null);
+
+  useEffect(() => {
+    api.get('/billing/plans').then(d => setPlans(d.plans || []));
+    api.get('/billing/subscription').then(setSubscription);
+  }, []);
+
+  const checkout = async (planId) => {
+    setLoading(planId);
+    const result = await api.post('/billing/checkout', { plan: planId });
+    setLoading(null);
+    if (result.checkout_url) {
+      window.location.href = result.checkout_url;
+    } else {
+      alert(result.error || 'Failed to start checkout.');
+    }
+  };
+
+  const portal = async () => {
+    const result = await api.post('/billing/portal', {});
+    if (result.portal_url) window.location.href = result.portal_url;
+    else alert(result.error || 'Failed to open billing portal.');
+  };
+
+  const planColors = { starter: 'var(--info)', growth: 'var(--primary)', pro: 'var(--success)' };
+  const currentPlan = subscription?.plan || 'trial';
+  const isTrialing = subscription?.status === 'trialing';
+
+  return (
+    <div>
+      <div className="page-header">
+        <div className="page-title">Billing</div>
+        <div className="page-subtitle">Manage your subscription and payment details.</div>
+      </div>
+
+      {subscription && (
+        <div className="card" style={{marginBottom:24, borderColor: isTrialing ? 'var(--warning)' : 'var(--border)'}}>
+          <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+            <div>
+              <div style={{fontWeight:700, fontSize:16, marginBottom:4}}>
+                {currentPlan === 'trial' ? '14-Day Free Trial' : `${currentPlan.charAt(0).toUpperCase() + currentPlan.slice(1)} Plan`}
+              </div>
+              <div style={{fontSize:13, color:'var(--text-secondary)'}}>
+                Status: <span className={`status-badge status-${subscription.status === 'active' ? 'compliant' : 'in_progress'}`}>{subscription.status || 'trialing'}</span>
+              </div>
+            </div>
+            {subscription.stripe_customer_id && (
+              <button className="btn btn-secondary" onClick={portal}>Manage Subscription →</button>
+            )}
+          </div>
+        </div>
+      )}
+
+      <div className="pricing-grid" style={{marginBottom:32}}>
+        {plans.map(plan => (
+          <div key={plan.id} className={`pricing-card ${plan.popular ? 'popular' : ''}`} style={{position:'relative'}}>
+            {plan.popular && <div className="pricing-popular-badge">Most Popular</div>}
+            {currentPlan === plan.id && (
+              <div style={{position:'absolute', top:12, right:12, background:'var(--success-bg)', color:'var(--success)', fontSize:11, fontWeight:700, padding:'2px 10px', borderRadius:100}}>Current</div>
+            )}
+            <div className="pricing-name">{plan.name}</div>
+            <div className="pricing-desc">{plan.description}</div>
+            <div style={{margin:'16px 0'}}>
+              <span className="pricing-price" style={{color: planColors[plan.id]}}>${plan.price}</span>
+              <span className="pricing-period">/month</span>
+            </div>
+            <button
+              className={`btn ${currentPlan === plan.id ? 'btn-secondary' : 'btn-primary'}`}
+              style={{width:'100%', justifyContent:'center'}}
+              onClick={() => currentPlan !== plan.id && checkout(plan.id)}
+              disabled={loading === plan.id || currentPlan === plan.id}
+            >
+              {loading === plan.id ? 'Redirecting...' : currentPlan === plan.id ? 'Current Plan' : `Upgrade to ${plan.name}`}
+            </button>
+            <ul className="pricing-features">
+              {plan.features.map((f, i) => <li key={i}>{f}</li>)}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      <div className="card">
+        <div className="card-title" style={{marginBottom:12}}>Stripe Setup Required</div>
+        <div style={{fontSize:13, color:'var(--text-secondary)', lineHeight:1.7}}>
+          To activate billing, set these environment variables before starting the server:
+        </div>
+        <div style={{background:'var(--bg)', border:'1px solid var(--border)', borderRadius:8, padding:16, marginTop:12, fontFamily:'monospace', fontSize:12, lineHeight:2}}>
+          <div><span style={{color:'var(--primary)'}}>STRIPE_SECRET_KEY</span>=sk_live_...</div>
+          <div><span style={{color:'var(--primary)'}}>STRIPE_WEBHOOK_SECRET</span>=whsec_...</div>
+          <div><span style={{color:'var(--primary)'}}>STRIPE_PRICE_STARTER</span>=price_...</div>
+          <div><span style={{color:'var(--primary)'}}>STRIPE_PRICE_GROWTH</span>=price_...</div>
+          <div><span style={{color:'var(--primary)'}}>STRIPE_PRICE_PRO</span>=price_...</div>
+          <div><span style={{color:'var(--primary)'}}>FRONTEND_URL</span>=https://your-domain.vercel.app</div>
+        </div>
+        <div style={{fontSize:12, color:'var(--text-muted)', marginTop:12}}>
+          Find your API keys at dashboard.stripe.com → Developers → API Keys. Create products and prices at dashboard.stripe.com → Products.
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ============================================
+// MAIN APP
+// ============================================
+function App() {
+  const [page, setPage] = useState('landing');
+  const [dashboard, setDashboard] = useState(null);
+
+  const loadDashboard = useCallback(async () => {
+    try {
+      const data = await api.get('/dashboard');
+      setDashboard(data);
+    } catch (e) {
+      console.error('Failed to load dashboard:', e);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (page !== 'landing') {
+      loadDashboard();
+    }
+  }, [page, loadDashboard]);
+
+  const enterApp = () => setPage('dashboard');
+
+  if (page === 'landing') {
+    return <LandingPage onEnterApp={enterApp} />;
+  }
+
+  const navItems = [
+    { id: 'dashboard', icon: '📊', label: 'Dashboard' },
+    { id: 'frameworks', icon: '🛡️', label: 'Frameworks' },
+    { id: 'evidence', icon: '📎', label: 'Evidence' },
+    { id: 'alerts', icon: '📡', label: 'Regulatory Radar', badge: dashboard?.unread_alerts },
+    { id: 'policies', icon: '📄', label: 'Policies' },
+    { id: 'reports', icon: '📑', label: 'Reports' },
+  ];
+
+  const renderPage = () => {
+    switch (page) {
+      case 'dashboard': return <DashboardPage dashboard={dashboard} onNavigate={setPage} />;
+      case 'frameworks': return <FrameworksPage />;
+      case 'evidence': return <EvidencePage />;
+      case 'alerts': return <AlertsPage />;
+      case 'policies': return <PoliciesPage />;
+      case 'reports': return <ReportsPage />;
+      case 'billing': return <BillingPage />;
+      case 'settings': return <SettingsPage />;
+      default: return <DashboardPage dashboard={dashboard} onNavigate={setPage} />;
+    }
+  };
+
+  return (
+    <div className="app-layout">
+      <aside className="sidebar">
+        <div className="sidebar-logo">
+          <div className="sidebar-logo-icon">C</div>
+          <div className="sidebar-logo-text">ComplianceKit</div>
+        </div>
+        <nav className="sidebar-nav">
+          <div className="nav-section">
+            <div className="nav-section-title">Overview</div>
+            {navItems.slice(0, 1).map(item => (
+              <button key={item.id} className={`nav-item ${page === item.id ? 'active' : ''}`} onClick={() => setPage(item.id)}>
+                <span className="nav-item-icon">{item.icon}</span>
+                {item.label}
+                {item.badge > 0 && <span className="nav-badge">{item.badge}</span>}
+              </button>
+            ))}
+          </div>
+          <div className="nav-section">
+            <div className="nav-section-title">Compliance</div>
+            {navItems.slice(1, 4).map(item => (
+              <button key={item.id} className={`nav-item ${page === item.id ? 'active' : ''}`} onClick={() => setPage(item.id)}>
+                <span className="nav-item-icon">{item.icon}</span>
+                {item.label}
+                {item.badge > 0 && <span className="nav-badge">{item.badge}</span>}
+              </button>
+            ))}
+          </div>
+          <div className="nav-section">
+            <div className="nav-section-title">Tools</div>
+            {navItems.slice(4).map(item => (
+              <button key={item.id} className={`nav-item ${page === item.id ? 'active' : ''}`} onClick={() => setPage(item.id)}>
+                <span className="nav-item-icon">{item.icon}</span>
+                {item.label}
+              </button>
+            ))}
+          </div>
+          <div className="nav-section">
+            <div className="nav-section-title">Account</div>
+            <button className={`nav-item ${page === 'billing' ? 'active' : ''}`} onClick={() => setPage('billing')}>
+              <span className="nav-item-icon">💳</span>
+              Billing
+            </button>
+            <button className={`nav-item ${page === 'settings' ? 'active' : ''}`} onClick={() => setPage('settings')}>
+              <span className="nav-item-icon">⚙️</span>
+              Settings
+            </button>
+          </div>
+        </nav>
+        <div className="sidebar-footer">
+          <div className="user-info">
+            <div className="user-avatar">JC</div>
+            <div className="user-details">
+              <div className="user-name">Jordan Chen</div>
+              <div className="user-role">Admin · Acme SaaS</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+      <main className="main-content">
+        <div className="page-container">
+          {renderPage()}
+        </div>
+      </main>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
