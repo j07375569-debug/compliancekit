@@ -59,7 +59,7 @@ def init_db():
         framework_id TEXT REFERENCES frameworks(id),
         control_id TEXT NOT NULL,
         title TEXT NOT NULL,
-        description TEXT,
+        description TEXT NOT NULL,
         category TEXT,
         severity TEXT DEFAULT 'medium',
         implementation_guidance TEXT
@@ -156,6 +156,15 @@ def init_db():
         details TEXT,
         created_at TEXT DEFAULT (datetime('now'))
     )''')
+
+    # Performance indexes
+    c.execute("CREATE INDEX IF NOT EXISTS idx_control_status_org_control ON control_status(org_id, control_id)")
+    c.execute("CREATE INDEX IF NOT EXISTS idx_evidence_org ON evidence(org_id)")
+    c.execute("CREATE INDEX IF NOT EXISTS idx_evidence_org_control ON evidence(org_id, control_id)")
+    c.execute("CREATE INDEX IF NOT EXISTS idx_controls_framework ON controls(framework_id)")
+    c.execute("CREATE INDEX IF NOT EXISTS idx_org_frameworks_org ON org_frameworks(org_id)")
+    c.execute("CREATE INDEX IF NOT EXISTS idx_policies_org ON policies(org_id)")
+    c.execute("CREATE INDEX IF NOT EXISTS idx_activity_log_org ON activity_log(org_id)")
 
     conn.commit()
     conn.close()

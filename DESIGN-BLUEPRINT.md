@@ -1,183 +1,171 @@
-# ComplianceKit — Design Blueprint
-## Anti-Vibe-Coded Rebuild Spec
+# ComplianceKit — Final Design Blueprint v2
+## Based on analysis of Vanta, Drata, Secureframe, Sprinto, Linear, Stripe
 
 ---
 
-## 1. COLOR SYSTEM — No Gradients
+## CRITICAL DECISION: LIGHT MODE
 
-**Rule: Single flat brand color + neutral palette. Zero gradients on text or backgrounds.**
-
-| Token | Value | Use |
-|-------|-------|-----|
-| --bg | #09090b | Page background (zinc-950) |
-| --bg-card | #111113 | Card background |
-| --border | #1e1e24 | All borders — ONE value |
-| --text | #ededef | Primary text |
-| --text-muted | #71717a | Secondary text (zinc-500) |
-| --accent | #2563eb | ONLY brand color — buttons, links, highlights |
-| --accent-hover | #1d4ed8 | Hover state for accent |
-| --green | #22c55e | Success/positive only |
-| --red | #ef4444 | Danger/negative only |
-
-**Rules:**
-- NO gradients anywhere (no linear-gradient, no conic-gradient, no radial-gradient on UI elements)
-- NO glow orbs, no shimmer borders, no particle canvas
-- Accent color used sparingly — only on CTA buttons and key highlights
-- Cards use solid bg + single border color, never glassmorphism
+Every real compliance SaaS (Vanta, Drata, Secureframe, Sprinto) uses a WHITE background.
+Dark mode = developer tool / AI toy. Light mode = enterprise trust / professional.
+ComplianceKit switches to LIGHT MODE effective immediately.
 
 ---
 
-## 2. TYPOGRAPHY — Strict Scale
+## COLOR SYSTEM
 
-**Font:** Inter (keep it — it's industry standard, fine when used with proper hierarchy)
+| Token | Hex | Use |
+|-------|-----|-----|
+| --bg | #ffffff | Page background |
+| --bg-subtle | #f8f9fa | Alternating sections, card backgrounds |
+| --bg-card | #ffffff | Cards (with border) |
+| --border | #e5e7eb | All borders (gray-200) |
+| --border-hover | #d1d5db | Hover state borders (gray-300) |
+| --text | #111827 | Primary text (gray-900) |
+| --text-secondary | #4b5563 | Body copy (gray-600) |
+| --text-muted | #9ca3af | Captions, labels (gray-400) |
+| --accent | #2563eb | Brand color — buttons and links only (blue-600) |
+| --accent-hover | #1d4ed8 | Button hover (blue-700) |
+| --accent-light | #eff6ff | Accent backgrounds (blue-50) |
+| --green | #16a34a | Success states only (green-600) |
+| --red | #dc2626 | Competitor prices in table (red-600) |
 
-| Element | Size | Weight | Line-height | Letter-spacing |
-|---------|------|--------|-------------|----------------|
-| H1 (hero) | 48px | 700 | 1.1 | -1.5px |
-| H2 (section) | 32px | 700 | 1.2 | -0.8px |
-| H3 (card title) | 18px | 600 | 1.3 | -0.3px |
-| Body | 15px | 400 | 1.7 | 0 |
-| Small/caption | 13px | 500 | 1.5 | 0 |
-| Overline/tag | 11px | 700 | 1 | 1.5px uppercase |
-
-**Rules:**
-- Max 3 font weights used: 400, 600, 700
-- No 800 or 900 weight (too heavy = screams AI)
-- No animated gradient text
-- No text shadows
-
----
-
-## 3. SPACING — 8pt Grid (Strict)
-
-Every margin, padding, and gap must be a multiple of 8.
-
-| Token | Value | Use |
-|-------|-------|-----|
-| --space-1 | 8px | Icon-to-text gap |
-| --space-2 | 16px | Inside components |
-| --space-3 | 24px | Between related elements |
-| --space-4 | 32px | Card padding |
-| --space-6 | 48px | Between groups |
-| --space-8 | 64px | Between sub-sections |
-| --space-12 | 96px | Between major sections |
-| --space-16 | 128px | Section padding (top/bottom) |
-
-**Rules:**
-- Section padding: 128px top, 128px bottom (not 100px — 100 breaks the 8pt grid)
-- Card padding: 32px
-- Max content width: 1088px (divisible by 8)
-- Never use odd values (5px, 14px, 28px, etc.)
+Rules:
+- ZERO gradients anywhere
+- Accent (#2563eb) used ONLY on primary buttons and key links
+- Gray palette from Tailwind gray (not zinc, not slate)
+- No colored backgrounds on sections — white or #f8f9fa only
 
 ---
 
-## 4. BORDER RADIUS — One Value
+## TYPOGRAPHY
 
-**Rule: Pick ONE radius and use it everywhere.**
+Font: Inter (matches Vanta, Linear, most modern SaaS)
+
+| Element | Size | Weight | Color | Line-height | Letter-spacing |
+|---------|------|--------|-------|-------------|----------------|
+| H1 | 48px | 700 | --text | 1.1 | -1.2px |
+| H2 | 36px | 700 | --text | 1.15 | -0.8px |
+| H3 | 20px | 600 | --text | 1.3 | -0.2px |
+| Body | 16px | 400 | --text-secondary | 1.7 | 0 |
+| Small | 14px | 400 | --text-muted | 1.6 | 0 |
+| Overline | 13px | 600 | --accent | 1 | 0.5px uppercase |
+| Nav links | 14px | 500 | --text-secondary | 1 | 0 |
+
+Weights allowed: 400, 500, 600, 700 ONLY.
+
+---
+
+## SPACING (8pt strict)
+
+| Use | Value |
+|-----|-------|
+| Nav height | 64px |
+| Container max-width | 1120px |
+| Section padding | 96px top/bottom |
+| Between heading and content | 48px |
+| Card padding | 32px |
+| Grid gap | 24px |
+| Between elements inside cards | 16px |
+| Inline spacing | 8px |
+
+---
+
+## BORDER RADIUS
 
 | Element | Radius |
 |---------|--------|
 | Cards | 12px |
 | Buttons | 8px |
-| Inputs | 8px |
-| Badges/pills | 100px (only pills) |
+| Badges/pills | 100px |
 
-That's it. No 6px, no 10px, no 16px, no 20px. Only 8px, 12px, and 100px.
-
----
-
-## 5. ANIMATIONS — Almost None
-
-**Rule: Max 2 animations on the entire page.**
-
-Allowed:
-- Blur-fade-in on scroll (sections appear) — subtle, 0.5s, ease
-- Button hover: background-color change, 0.15s transition
-
-NOT allowed:
-- Shimmer borders
-- Particle canvas
-- Floating glow orbs
-- Card translateY on hover
-- Animated gradient text
-- Marquee scrolling
-- Number ticker counting up
-- Shine sweep on buttons
-- Conic-gradient rotation
-- Border beam effects
-
-**Every hover:** Only `border-color` or `background-color` change. No transform. No translateY. No scale.
+Three values only. No 6px, 10px, 16px, 20px.
 
 ---
 
-## 6. SOCIAL PROOF — Honest Only
+## BUTTONS
 
-**Rules:**
-- NO fake testimonials with fake names
-- NO "Trusted by 500+ teams" without proof
-- NO fake company logos
-- NO fake YC batch references
+| Type | Styles |
+|------|--------|
+| Primary | bg: #2563eb, color: white, padding: 12px 24px, radius: 8px, weight: 600, size: 15px |
+| Secondary | bg: white, border: 1px solid #e5e7eb, color: #111827, same padding/radius |
+| Hover | Primary darkens to #1d4ed8. Secondary border darkens to #d1d5db. |
 
-Allowed alternatives:
-- Framework badges (SOC 2, HIPAA, GDPR — these are real)
-- Use case scenarios (honest descriptions of who this is for)
-- "Early access" or "Join the waitlist" messaging
-- Transparent pricing comparison vs named competitors (factual)
+No gradients. No glow. No shine sweep. No shadows on hover.
 
 ---
 
-## 7. EMOJIS — Removed
+## NAV
 
-**Rule: Zero emojis in headings, navigation, or card titles.**
-
-Allowed: Framework-specific icons if they're actual SVG icons, not emoji.
-For now: Use simple text or single-character symbols (✓, →, ·) only.
-
----
-
-## 8. SECTIONS — Lean
-
-**Only these sections, in this order:**
-1. Nav (fixed, solid bg, no blur/glass)
-2. Hero (headline + subtitle + 1 CTA button + framework list)
-3. Problem (3 pain points — text only, no cards)
-4. Comparison table (vs Vanta/Drata — factual)
-5. Features (6 items, simple grid, no bento)
-6. How it works (3 steps, inline, no cards)
-7. Pricing (3 tiers, clean, no strikethrough gimmick)
-8. FAQ (accordion or simple grid)
-9. CTA (one line + one button)
-10. Footer
-
-**Removed:**
-- Product mockup (fake dashboard screenshots = vibe-coded tell)
-- Marquee
-- Number ticker stats
-- Testimonials section
-- Glow orbs / particles / dot pattern
+- Height: 64px
+- Background: white
+- Border-bottom: 1px solid #e5e7eb
+- Logo: text only, no icon box (or simple one-color mark)
+- Links: 14px, weight 500, color #4b5563, hover to #111827
+- Sticky: yes, with background: rgba(255,255,255,0.95) + backdrop-filter:blur(8px)
 
 ---
 
-## 9. BUTTONS — Two Styles Only
+## ANIMATIONS
 
-| Type | Style |
-|------|-------|
-| Primary | Solid accent bg (#2563eb), white text, 8px radius |
-| Ghost | Transparent bg, border, muted text |
+ONLY allowed:
+1. Subtle fade-in on scroll (opacity 0→1, translateY 6px→0, duration 0.4s)
+2. Button hover transitions (background-color 0.15s)
 
-No shine sweep. No glow on hover. No gradient. Just:
-```css
-.btn:hover { background: #1d4ed8; }
-```
+NOTHING ELSE. No particles, no glow, no shimmer, no floating, no counting, no marquee.
 
 ---
 
-## 10. PAGE BACKGROUND
+## SECTIONS (Landing Page)
 
-- Solid #09090b. Nothing else.
-- No dot pattern
-- No particle canvas
-- No glow orbs
-- No radial gradient masks
+1. Nav
+2. Hero — headline, subtitle, 1-2 buttons, framework tags
+3. Logos/trust strip — "Compliance frameworks we support" with text badges
+4. Problem — 3 columns, text only, numbered
+5. Comparison table — vs Vanta/Drata/Secureframe (factual pricing)
+6. Features — 2x3 grid, clean cards with number + title + description
+7. How it works — 3 numbered steps, simple text
+8. Pricing — 3 tier cards, white bg, blue border on featured
+9. FAQ — 2 column grid
+10. CTA — simple centered text + button
+11. Footer — minimal, one row
 
-Clean. Quiet. Professional.
+Alternating backgrounds: white (#fff) and subtle gray (#f8f9fa) for visual separation.
+
+---
+
+## SECTIONS (Dashboard App)
+
+Login page:
+- White background (not dark)
+- Centered card with shadow
+- Logo at top
+- Email + password fields
+- Blue primary button
+- Link to sign up / back to home
+
+Dashboard:
+- White sidebar with gray-50 background
+- Gray border separating sidebar from content
+- Content area: white background
+- Cards: white bg, 1px gray border, 12px radius
+- Stats: large numbers, small labels below
+- Tables: clean rows, alternating gray-50 backgrounds
+- NO colored sidebar, no gradients, no glow effects
+
+---
+
+## WHAT NOT TO DO
+
+- No dark mode on either page
+- No gradients (linear-gradient, conic-gradient, radial-gradient)
+- No particles, canvas, or animated backgrounds
+- No glow orbs or blur effects
+- No shimmer/shine borders
+- No emojis in UI
+- No animated text
+- No fake testimonials
+- No "Trusted by 500+" without proof
+- No translateY hover on cards
+- No box-shadow on hover
+- No font-weight above 700
+- No more than 1 animation type

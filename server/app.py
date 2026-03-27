@@ -10,6 +10,7 @@ import uuid
 import re
 import urllib.request
 import urllib.parse
+import urllib.error
 import base64
 import hmac
 import hashlib
@@ -23,6 +24,10 @@ from database import get_db, init_db, seed_frameworks, seed_demo_data
 PORT = int(os.environ.get('PORT', 3000))
 STATIC_DIR = os.path.join(os.path.dirname(__file__), '..', 'public')
 FRONTEND_URL = os.environ.get('FRONTEND_URL', f'http://localhost:{PORT}')
+
+# Security constants
+MAX_BODY_SIZE = 1024 * 1024  # 1MB
+VALID_CONTROL_STATUSES = {'not_started', 'in_progress', 'compliant', 'non_compliant'}
 
 # Stripe config from environment
 STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', '')
@@ -47,11 +52,27 @@ def stripe_request(method, path, data=None):
         with urllib.request.urlopen(req) as resp:
             return json.loads(resp.read())
     except urllib.error.HTTPError as e:
-        return json.loads(e.read())
+        error_body = e.read().decode()
+        print(f"Stripe API error: {error_body}")  # Log for debugging
+        return {"error": "Payment processing failed"}
 
 class APIHandler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=STATIC_DIR, **kwargs)
+
+    def end_headers(self):
+        """Override to add security headers to all responses."""
+        self.send_header('X-Content-Type-Options', 'nosniff')
+        self.send_header('X-Frame-Options', 'DENY')
+        self.send_header('Cache-Control', 'no-store')
+        super().end_headers()
+
+    def _validate_status(self, status):
+        """Validate control status is in allowed set."""
+        if status not in VALID_CONTROL_STATUSES:
+            self._json_response({"error": f"Invalid status: {status}"}, 400)
+            return False
+        return True
 
     def do_OPTIONS(self):
         self.send_response(200)
@@ -59,7 +80,12 @@ class APIHandler(http.server.SimpleHTTPRequestHandler):
         self.end_headers()
 
     def _cors_headers(self):
-        self.send_header('Access-Control-Allow-Origin', '*')
+        origin = self.headers.get('Origin', '')
+        allowed = os.environ.get('FRONTEND_URL', f'http://localhost:{PORT}')
+        if origin == allowed or not origin:
+            self.send_header('Access-Control-Allow-Origin', allowed)
+        # If origin doesn't match, no Access-Control-Allow-Origin header is sent,
+        # which causes the browser to reject the cross-origin request.
         self.send_header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
         self.send_header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
 
@@ -70,13 +96,21 @@ class APIHandler(http.server.SimpleHTTPRequestHandler):
         self.send_header('Content-Type', 'application/json')
         self.send_header('Content-Length', str(len(body)))
         self.send_header('Connection', 'close')
+        self.send_header('X-Content-Type-Options', 'nosniff')
+        self.send_header('X-Frame-Options', 'DENY')
+        self.send_header('Cache-Control', 'no-store')
         self.end_headers()
         self.wfile.write(body)
 
     def _read_body(self):
         length = int(self.headers.get('Content-Length', 0))
+        if length > MAX_BODY_SIZE:
+            return None
         if length:
-            return json.loads(self.rfile.read(length))
+            try:
+                return json.loads(self.rfile.read(length))
+            except json.JSONDecodeError:
+                return None
         return {}
 
     def _route(self, method):
@@ -130,9 +164,12 @@ class APIHandler(http.server.SimpleHTTPRequestHandler):
             if result is None:
                 self._json_response({"error": "Not found"}, 404)
         else:
-            # Serve static files, default to index.html for SPA routing
+            # Serve static files with path traversal protection
             parsed = urlparse(self.path)
-            filepath = os.path.join(STATIC_DIR, parsed.path.lstrip('/'))
+            filepath = os.path.normpath(os.path.join(STATIC_DIR, parsed.path.lstrip('/')))
+            if not filepath.startswith(os.path.normpath(STATIC_DIR)):
+                self._json_response({"error": "Forbidden"}, 403)
+                return
             if os.path.isfile(filepath):
                 super().do_GET()
             else:
@@ -282,24 +319,15 @@ class APIHandler(http.server.SimpleHTTPRequestHandler):
         conn = get_db()
 
         controls = conn.execute("""
-            SELECT c.*, cs.status as compliance_status, cs.notes, cs.last_reviewed
+            SELECT c.*, cs.status as compliance_status, cs.notes, cs.last_reviewed,
+                   (SELECT COUNT(*) FROM evidence WHERE control_id = c.id AND org_id = ?) as evidence_count
             FROM controls c
             LEFT JOIN control_status cs ON c.id = cs.control_id AND cs.org_id = ?
             WHERE c.framework_id = ?
             ORDER BY c.control_id
-        """, (org_id, fw_id)).fetchall()
+        """, (org_id, org_id, fw_id)).fetchall()
 
-        result = []
-        for ctrl in controls:
-            d = dict(ctrl)
-            # Get evidence count for this control
-            ev_count = conn.execute(
-                "SELECT COUNT(*) as count FROM evidence WHERE control_id = ? AND org_id = ?",
-                (ctrl['id'], org_id)
-            ).fetchone()['count']
-            d['evidence_count'] = ev_count
-            result.append(d)
-
+        result = [dict(ctrl) for ctrl in controls]
         conn.close()
         self._json_response(result)
 
@@ -378,53 +406,76 @@ class APIHandler(http.server.SimpleHTTPRequestHandler):
 
     def _update_control_status(self, params, control_id):
         body = self._read_body()
+        if body is None:
+            return self._json_response({"error": "Invalid request body"}, 400)
+
         org_id = "demo-org"
+        status = body.get('status', 'not_started')
+
+        if not self._validate_status(status):
+            return
+
         conn = get_db()
+        try:
+            conn.execute("""
+                INSERT INTO control_status (id, org_id, control_id, status, notes, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?)
+                ON CONFLICT(org_id, control_id) DO UPDATE SET
+                    status = excluded.status,
+                    notes = excluded.notes,
+                    updated_at = excluded.updated_at
+            """, (str(uuid.uuid4()), org_id, control_id, status,
+                  body.get('notes', ''), datetime.now().isoformat()))
 
-        conn.execute("""
-            INSERT INTO control_status (id, org_id, control_id, status, notes, updated_at)
-            VALUES (?, ?, ?, ?, ?, ?)
-            ON CONFLICT(org_id, control_id) DO UPDATE SET
-                status = excluded.status,
-                notes = excluded.notes,
-                updated_at = excluded.updated_at
-        """, (str(uuid.uuid4()), org_id, control_id, body.get('status', 'not_started'),
-              body.get('notes', ''), datetime.now().isoformat()))
+            conn.execute(
+                "INSERT INTO activity_log (id, org_id, user_id, action, entity_type, details) VALUES (?, ?, ?, ?, ?, ?)",
+                (str(uuid.uuid4()), org_id, "demo-user", "control_updated", "control",
+                 f"Control {control_id} updated to {status}")
+            )
 
-        conn.execute(
-            "INSERT INTO activity_log (id, org_id, user_id, action, entity_type, details) VALUES (?, ?, ?, ?, ?, ?)",
-            (str(uuid.uuid4()), org_id, "demo-user", "control_updated", "control",
-             f"Control {control_id} updated to {body.get('status')}")
-        )
-
-        conn.commit()
-        conn.close()
-        self._json_response({"success": True})
+            conn.commit()
+            conn.close()
+            self._json_response({"success": True})
+        except Exception as e:
+            conn.rollback()
+            conn.close()
+            self._json_response({"error": "Database error"}, 500)
 
     def _add_evidence(self, params):
         body = self._read_body()
+        if body is None:
+            return self._json_response({"error": "Invalid request body"}, 400)
+
         org_id = "demo-org"
         ev_id = str(uuid.uuid4())
         conn = get_db()
 
-        conn.execute("""
-            INSERT INTO evidence (id, org_id, control_id, title, description, type, source, status, uploaded_by)
-            VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', 'demo-user')
-        """, (ev_id, org_id, body.get('control_id'), body.get('title'),
-              body.get('description'), body.get('type', 'document'), body.get('source', 'Manual')))
+        try:
+            conn.execute("""
+                INSERT INTO evidence (id, org_id, control_id, title, description, type, source, status, uploaded_by)
+                VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', 'demo-user')
+            """, (ev_id, org_id, body.get('control_id'), body.get('title'),
+                  body.get('description'), body.get('type', 'document'), body.get('source', 'Manual')))
 
-        conn.execute(
-            "INSERT INTO activity_log (id, org_id, user_id, action, entity_type, details) VALUES (?, ?, ?, ?, ?, ?)",
-            (str(uuid.uuid4()), org_id, "demo-user", "evidence_uploaded", "evidence",
-             f"Evidence uploaded: {body.get('title')}")
-        )
+            conn.execute(
+                "INSERT INTO activity_log (id, org_id, user_id, action, entity_type, details) VALUES (?, ?, ?, ?, ?, ?)",
+                (str(uuid.uuid4()), org_id, "demo-user", "evidence_uploaded", "evidence",
+                 f"Evidence uploaded: {body.get('title')}")
+            )
 
-        conn.commit()
-        conn.close()
-        self._json_response({"success": True, "id": ev_id}, 201)
+            conn.commit()
+            conn.close()
+            self._json_response({"success": True, "id": ev_id}, 201)
+        except Exception as e:
+            conn.rollback()
+            conn.close()
+            self._json_response({"error": "Database error"}, 500)
 
     def _generate_policy(self, params):
         body = self._read_body()
+        if body is None:
+            return self._json_response({"error": "Invalid request body"}, 400)
+
         org_id = "demo-org"
         policy_type = body.get('type', 'Acceptable Use Policy')
         framework = body.get('framework', 'soc2')
@@ -683,21 +734,27 @@ This policy establishes requirements for managing access to Acme SaaS Co. inform
 
         policy_id = str(uuid.uuid4())
         conn = get_db()
-        conn.execute("""
-            INSERT INTO policies (id, org_id, title, content, framework_id, status, created_by)
-            VALUES (?, ?, ?, ?, ?, 'draft', 'demo-user')
-        """, (policy_id, org_id, template["title"], template["content"], framework))
 
-        conn.execute(
-            "INSERT INTO activity_log (id, org_id, user_id, action, entity_type, details) VALUES (?, ?, ?, ?, ?, ?)",
-            (str(uuid.uuid4()), org_id, "demo-user", "policy_generated", "policy",
-             f"AI-generated {template['title']}")
-        )
+        try:
+            conn.execute("""
+                INSERT INTO policies (id, org_id, title, content, framework_id, status, created_by)
+                VALUES (?, ?, ?, ?, ?, 'draft', 'demo-user')
+            """, (policy_id, org_id, template["title"], template["content"], framework))
 
-        conn.commit()
-        conn.close()
+            conn.execute(
+                "INSERT INTO activity_log (id, org_id, user_id, action, entity_type, details) VALUES (?, ?, ?, ?, ?, ?)",
+                (str(uuid.uuid4()), org_id, "demo-user", "policy_generated", "policy",
+                 f"AI-generated {template['title']}")
+            )
 
-        self._json_response({"success": True, "id": policy_id, "title": template["title"], "content": template["content"]})
+            conn.commit()
+            conn.close()
+
+            self._json_response({"success": True, "id": policy_id, "title": template["title"], "content": template["content"]})
+        except Exception as e:
+            conn.rollback()
+            conn.close()
+            self._json_response({"error": "Database error"}, 500)
 
     def _subscribe_framework(self, params, fw_id):
         org_id = "demo-org"
@@ -711,46 +768,69 @@ This policy establishes requirements for managing access to Acme SaaS Co. inform
             conn.close()
             return self._json_response({"error": "Already subscribed"}, 400)
 
-        conn.execute(
-            "INSERT INTO org_frameworks (id, org_id, framework_id) VALUES (?, ?, ?)",
-            (str(uuid.uuid4()), org_id, fw_id)
-        )
-
-        # Create control statuses
-        controls = conn.execute("SELECT id FROM controls WHERE framework_id = ?", (fw_id,)).fetchall()
-        for ctrl in controls:
+        try:
             conn.execute(
-                "INSERT OR IGNORE INTO control_status (id, org_id, control_id, status) VALUES (?, ?, ?, 'not_started')",
-                (str(uuid.uuid4()), org_id, ctrl['id'])
+                "INSERT INTO org_frameworks (id, org_id, framework_id) VALUES (?, ?, ?)",
+                (str(uuid.uuid4()), org_id, fw_id)
             )
 
-        conn.commit()
-        conn.close()
-        self._json_response({"success": True})
+            # Create control statuses
+            controls = conn.execute("SELECT id FROM controls WHERE framework_id = ?", (fw_id,)).fetchall()
+            for ctrl in controls:
+                conn.execute(
+                    "INSERT OR IGNORE INTO control_status (id, org_id, control_id, status) VALUES (?, ?, ?, 'not_started')",
+                    (str(uuid.uuid4()), org_id, ctrl['id'])
+                )
+
+            conn.commit()
+            conn.close()
+            self._json_response({"success": True})
+        except Exception as e:
+            conn.rollback()
+            conn.close()
+            self._json_response({"error": "Database error"}, 500)
 
     def _mark_alert_read(self, params, alert_id):
         conn = get_db()
-        conn.execute("UPDATE regulatory_alerts SET is_read = 1 WHERE id = ?", (alert_id,))
-        conn.commit()
-        conn.close()
-        self._json_response({"success": True})
+        try:
+            conn.execute("UPDATE regulatory_alerts SET is_read = 1 WHERE id = ?", (alert_id,))
+            conn.commit()
+            conn.close()
+            self._json_response({"success": True})
+        except Exception as e:
+            conn.rollback()
+            conn.close()
+            self._json_response({"error": "Database error"}, 500)
 
     def _update_policy(self, params, policy_id):
         body = self._read_body()
+        if body is None:
+            return self._json_response({"error": "Invalid request body"}, 400)
+
         conn = get_db()
-        conn.execute("""
-            UPDATE policies SET content = ?, status = ?, updated_at = ? WHERE id = ?
-        """, (body.get('content'), body.get('status', 'draft'), datetime.now().isoformat(), policy_id))
-        conn.commit()
-        conn.close()
-        self._json_response({"success": True})
+        try:
+            conn.execute("""
+                UPDATE policies SET content = ?, status = ?, updated_at = ? WHERE id = ?
+            """, (body.get('content'), body.get('status', 'draft'), datetime.now().isoformat(), policy_id))
+            conn.commit()
+            conn.close()
+            self._json_response({"success": True})
+        except Exception as e:
+            conn.rollback()
+            conn.close()
+            self._json_response({"error": "Database error"}, 500)
 
     def _delete_evidence(self, params, ev_id):
         conn = get_db()
-        conn.execute("DELETE FROM evidence WHERE id = ?", (ev_id,))
-        conn.commit()
-        conn.close()
-        self._json_response({"success": True})
+        try:
+            conn.execute("DELETE FROM evidence WHERE id = ?", (ev_id,))
+            conn.commit()
+            conn.close()
+            self._json_response({"success": True})
+        except Exception as e:
+            conn.rollback()
+            conn.close()
+            self._json_response({"error": "Database error"}, 500)
 
     # ========= BILLING HANDLERS =========
 
@@ -825,11 +905,11 @@ This policy establishes requirements for managing access to Acme SaaS Co. inform
         org_id = "demo-org"
 
         if not STRIPE_SECRET_KEY:
-            return self._json_response({"error": "Stripe not configured. Set STRIPE_SECRET_KEY."}, 400)
+            return self._json_response({"error": "Billing is not available right now."}, 503)
 
         price_id = STRIPE_PRICES.get(plan)
         if not price_id:
-            return self._json_response({"error": f"No price configured for plan: {plan}. Set STRIPE_PRICE_{plan.upper()}."}, 400)
+            return self._json_response({"error": "This plan is not available yet."}, 400)
 
         # Get or create Stripe customer
         conn = get_db()
@@ -868,7 +948,8 @@ This policy establishes requirements for managing access to Acme SaaS Co. inform
         })
 
         if 'url' not in session:
-            return self._json_response({"error": session.get('error', {}).get('message', 'Stripe error')}, 400)
+            print(f"Stripe checkout error: {session}")  # Log for debugging
+            return self._json_response({"error": "Failed to create checkout session. Please try again."}, 400)
 
         self._json_response({"checkout_url": session['url'], "session_id": session['id']})
 
@@ -899,78 +980,90 @@ This policy establishes requirements for managing access to Acme SaaS Co. inform
 
     def _stripe_webhook(self, params):
         """Handle Stripe webhook events."""
+        if not STRIPE_WEBHOOK_SECRET:
+            return self._json_response({"error": "Webhook not configured"}, 503)
+
         length = int(self.headers.get('Content-Length', 0))
         raw_body = self.rfile.read(length)
         sig_header = self.headers.get('Stripe-Signature', '')
 
-        # Verify webhook signature
-        if STRIPE_WEBHOOK_SECRET and sig_header:
-            try:
-                parts = {k: v for k, v in (p.split('=', 1) for p in sig_header.split(','))}
-                timestamp = parts.get('t', '')
-                sig = parts.get('v1', '')
-                signed_payload = f"{timestamp}.".encode() + raw_body
-                expected = hmac.new(STRIPE_WEBHOOK_SECRET.encode(), signed_payload, hashlib.sha256).hexdigest()
-                if not hmac.compare_digest(expected, sig):
-                    return self._json_response({"error": "Invalid signature"}, 400)
-            except Exception:
-                return self._json_response({"error": "Webhook verification failed"}, 400)
+        # Require valid webhook signature
+        if not sig_header:
+            return self._json_response({"error": "Missing signature"}, 400)
 
-        event = json.loads(raw_body)
+        try:
+            parts = {k: v for k, v in (p.split('=', 1) for p in sig_header.split(','))}
+            timestamp = parts.get('t', '')
+            sig = parts.get('v1', '')
+            signed_payload = f"{timestamp}.".encode() + raw_body
+            expected = hmac.new(STRIPE_WEBHOOK_SECRET.encode(), signed_payload, hashlib.sha256).hexdigest()
+            if not hmac.compare_digest(expected, sig):
+                return self._json_response({"error": "Invalid signature"}, 400)
+        except Exception:
+            return self._json_response({"error": "Webhook verification failed"}, 400)
+
+        try:
+            event = json.loads(raw_body)
+        except json.JSONDecodeError:
+            return self._json_response({"error": "Invalid JSON"}, 400)
         event_type = event.get('type', '')
         data = event.get('data', {}).get('object', {})
 
-        if event_type in ('customer.subscription.created', 'customer.subscription.updated'):
-            customer_id = data.get('customer')
-            status = data.get('status')
-            plan_name = 'growth'
-            items = data.get('items', {}).get('data', [])
-            if items:
-                price_id = items[0].get('price', {}).get('id', '')
-                for plan, pid in STRIPE_PRICES.items():
-                    if pid == price_id:
-                        plan_name = plan
-                        break
+        try:
+            if event_type in ('customer.subscription.created', 'customer.subscription.updated'):
+                customer_id = data.get('customer')
+                status = data.get('status')
+                plan_name = 'growth'
+                items = data.get('items', {}).get('data', [])
+                if items:
+                    price_id = items[0].get('price', {}).get('id', '')
+                    for plan, pid in STRIPE_PRICES.items():
+                        if pid == price_id:
+                            plan_name = plan
+                            break
 
-            conn = get_db()
-            orgs = conn.execute("SELECT id, settings FROM organizations").fetchall()
-            for org in orgs:
-                s = json.loads(org['settings'] or '{}')
-                if s.get('stripe_customer_id') == customer_id:
-                    s['plan'] = plan_name
-                    s['subscription_status'] = status
-                    s['current_period_end'] = data.get('current_period_end')
-                    conn.execute("UPDATE organizations SET settings = ? WHERE id = ?",
-                                 (json.dumps(s), org['id']))
-            conn.commit()
-            conn.close()
+                conn = get_db()
+                orgs = conn.execute("SELECT id, settings FROM organizations").fetchall()
+                for org in orgs:
+                    s = json.loads(org['settings'] or '{}')
+                    if s.get('stripe_customer_id') == customer_id:
+                        s['plan'] = plan_name
+                        s['subscription_status'] = status
+                        s['current_period_end'] = data.get('current_period_end')
+                        conn.execute("UPDATE organizations SET settings = ? WHERE id = ?",
+                                     (json.dumps(s), org['id']))
+                conn.commit()
+                conn.close()
 
-        elif event_type == 'customer.subscription.deleted':
-            customer_id = data.get('customer')
-            conn = get_db()
-            orgs = conn.execute("SELECT id, settings FROM organizations").fetchall()
-            for org in orgs:
-                s = json.loads(org['settings'] or '{}')
-                if s.get('stripe_customer_id') == customer_id:
-                    s['plan'] = 'trial'
-                    s['subscription_status'] = 'canceled'
-                    conn.execute("UPDATE organizations SET settings = ? WHERE id = ?",
-                                 (json.dumps(s), org['id']))
-            conn.commit()
-            conn.close()
+            elif event_type == 'customer.subscription.deleted':
+                customer_id = data.get('customer')
+                conn = get_db()
+                orgs = conn.execute("SELECT id, settings FROM organizations").fetchall()
+                for org in orgs:
+                    s = json.loads(org['settings'] or '{}')
+                    if s.get('stripe_customer_id') == customer_id:
+                        s['plan'] = 'trial'
+                        s['subscription_status'] = 'canceled'
+                        conn.execute("UPDATE organizations SET settings = ? WHERE id = ?",
+                                     (json.dumps(s), org['id']))
+                conn.commit()
+                conn.close()
 
-        elif event_type == 'invoice.payment_failed':
-            customer_id = data.get('customer')
-            conn = get_db()
-            orgs = conn.execute("SELECT id, settings FROM organizations").fetchall()
-            for org in orgs:
-                s = json.loads(org['settings'] or '{}')
-                if s.get('stripe_customer_id') == customer_id:
-                    s['subscription_status'] = 'past_due'
-                    conn.execute("UPDATE organizations SET settings = ? WHERE id = ?",
-                                 (json.dumps(s), org['id']))
-            conn.commit()
-            conn.close()
+            elif event_type == 'invoice.payment_failed':
+                customer_id = data.get('customer')
+                conn = get_db()
+                orgs = conn.execute("SELECT id, settings FROM organizations").fetchall()
+                for org in orgs:
+                    s = json.loads(org['settings'] or '{}')
+                    if s.get('stripe_customer_id') == customer_id:
+                        s['subscription_status'] = 'past_due'
+                        conn.execute("UPDATE organizations SET settings = ? WHERE id = ?",
+                                     (json.dumps(s), org['id']))
+                conn.commit()
+                conn.close()
+        except Exception as e:
+            # Log but don't fail webhook processing
+            print(f"Webhook processing error: {e}")
 
         self._json_response({"received": True})
 

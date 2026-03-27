@@ -15,31 +15,31 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg: #0a0a0f;
-  --bg-card: #12121a;
-  --bg-card-hover: #1a1a26;
-  --bg-sidebar: #0d0d14;
-  --bg-input: #1a1a26;
-  --border: #1e1e2e;
-  --border-hover: #2a2a3e;
-  --text: #e4e4e7;
-  --text-secondary: #9393a8;
-  --text-muted: #5f5f78;
-  --primary: #6366f1;
-  --primary-hover: #7577f5;
-  --primary-bg: rgba(99,102,241,0.1);
-  --success: #10b981;
-  --success-bg: rgba(16,185,129,0.1);
+  --bg: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f3f4f6;
+  --bg-sidebar: #f9fafb;
+  --bg-input: #ffffff;
+  --border: #e5e7eb;
+  --border-hover: #d1d5db;
+  --text: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #9ca3af;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-bg: rgba(37,99,235,0.1);
+  --success: #16a34a;
+  --success-bg: rgba(22,163,74,0.1);
   --warning: #f59e0b;
   --warning-bg: rgba(245,158,11,0.1);
-  --danger: #ef4444;
-  --danger-bg: rgba(239,68,68,0.1);
+  --danger: #dc2626;
+  --danger-bg: rgba(220,38,38,0.1);
   --info: #3b82f6;
   --info-bg: rgba(59,130,246,0.1);
   --radius: 12px;
   --radius-sm: 8px;
   --radius-lg: 16px;
-  --shadow: 0 4px 24px rgba(0,0,0,0.3);
+  --shadow: 0 4px 24px rgba(0,0,0,0.1);
   --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --transition: 0.2s ease;
 }
@@ -105,13 +105,13 @@ body {
 .sidebar-logo-icon {
   width: 36px;
   height: 36px;
-  background: linear-gradient(135deg, var(--primary), #8b5cf6);
+  background: var(--primary);
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 18px;
-  font-weight: 800;
+  font-weight: 700;
   color: white;
 }
 
@@ -194,7 +194,7 @@ body {
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: linear-gradient(135deg, #6366f1, #ec4899);
+  background: var(--primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -216,7 +216,7 @@ body {
 
 .page-title {
   font-size: 28px;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.5px;
   margin-bottom: 4px;
 }
@@ -269,7 +269,7 @@ body {
   transition: all var(--transition);
 }
 
-.stat-card:hover { border-color: var(--border-hover); transform: translateY(-1px); }
+.stat-card:hover { border-color: var(--border-hover); }
 
 .stat-label {
   font-size: 12px;
@@ -282,7 +282,7 @@ body {
 
 .stat-value {
   font-size: 32px;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -1px;
   line-height: 1;
 }
@@ -336,7 +336,7 @@ body {
 
 .score-ring-value {
   font-size: 36px;
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1;
 }
 
@@ -367,7 +367,6 @@ body {
 
 .framework-card:hover {
   border-color: var(--primary);
-  transform: translateY(-2px);
   box-shadow: 0 8px 32px rgba(99,102,241,0.1);
 }
 
@@ -503,7 +502,7 @@ body {
   background: var(--primary);
   color: white;
 }
-.btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+.btn-primary:hover { background: var(--primary-hover); }
 
 .btn-secondary {
   background: var(--bg-input);
@@ -625,7 +624,8 @@ body {
 }
 
 .form-input:focus, .form-select:focus, .form-textarea:focus {
-  outline: none;
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
   border-color: var(--primary);
 }
 
@@ -762,14 +762,11 @@ body {
 
 .hero-title {
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: -2px;
   line-height: 1.1;
   margin-bottom: 20px;
-  background: linear-gradient(135deg, #fff 0%, #e4e4e7 50%, #9393a8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--text);
 }
 
 .hero-subtitle {
@@ -807,7 +804,7 @@ body {
 .features-title {
   text-align: center;
   font-size: 36px;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -1px;
   margin-bottom: 48px;
 }
@@ -828,7 +825,6 @@ body {
 
 .feature-card:hover {
   border-color: var(--primary);
-  transform: translateY(-4px);
   box-shadow: 0 12px 40px rgba(99,102,241,0.1);
 }
 
@@ -898,7 +894,7 @@ body {
 
 .pricing-name { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
 .pricing-desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; }
-.pricing-price { font-size: 42px; font-weight: 900; letter-spacing: -2px; }
+.pricing-price { font-size: 42px; font-weight: 700; letter-spacing: -2px; }
 .pricing-period { font-size: 14px; color: var(--text-muted); font-weight: 400; }
 
 .pricing-features {
@@ -1000,6 +996,7 @@ body {
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+@keyframes spin { to { transform: rotate(360deg); } }
 
 .loading { animation: pulse 1.5s infinite; }
 
@@ -1033,30 +1030,88 @@ window.CK_API_URL = 'https://web-production-be130.up.railway.app';
 const API = (window.CK_API_URL || '') + '/api';
 const api = {
   get: async (path) => {
-    const res = await fetch(`${API}${path}`);
-    return res.json();
+    try {
+      const res = await fetch(`${API}${path}`);
+      if (!res.ok) throw new Error(`API error: ${res.status}`);
+      return await res.json();
+    } catch (e) {
+      console.error(`GET ${path} failed:`, e);
+      return null;
+    }
   },
   post: async (path, body) => {
-    const res = await fetch(`${API}${path}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
-    return res.json();
+    try {
+      const res = await fetch(`${API}${path}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      if (!res.ok) throw new Error(`API error: ${res.status}`);
+      return await res.json();
+    } catch (e) {
+      console.error(`POST ${path} failed:`, e);
+      return null;
+    }
   },
   put: async (path, body) => {
-    const res = await fetch(`${API}${path}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
-    return res.json();
+    try {
+      const res = await fetch(`${API}${path}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      if (!res.ok) throw new Error(`API error: ${res.status}`);
+      return await res.json();
+    } catch (e) {
+      console.error(`PUT ${path} failed:`, e);
+      return null;
+    }
   },
   del: async (path) => {
-    const res = await fetch(`${API}${path}`, { method: 'DELETE' });
-    return res.json();
-  },
+    try {
+      const res = await fetch(`${API}${path}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error(`API error: ${res.status}`);
+      return await res.json();
+    } catch (e) {
+      console.error(`DELETE ${path} failed:`, e);
+      return null;
+    }
+  }
 };
+
+// ============================================
+// LOADING & ERROR COMPONENTS
+// ============================================
+function Loading({ text = 'Loading...' }) {
+  return React.createElement('div', {
+    style: { display:'flex', alignItems:'center', justifyContent:'center', padding:'48px', color:'var(--text-muted)', gap:'8px' }
+  },
+    React.createElement('div', {
+      style: { width:16, height:16, border:'2px solid var(--border)', borderTop:'2px solid var(--primary)', borderRadius:'50%', animation:'spin 0.6s linear infinite' }
+    }),
+    text
+  );
+}
+
+function ErrorBanner({ message, onDismiss }) {
+  if (!message) return null;
+  return React.createElement('div', {
+    style: { background:'#fef2f2', border:'1px solid #fecaca', color:'#dc2626', padding:'12px 16px', borderRadius:'8px', marginBottom:'16px', display:'flex', justifyContent:'space-between', alignItems:'center', fontSize:'14px' }
+  },
+    message,
+    React.createElement('button', { onClick: onDismiss, style: { background:'none', border:'none', color:'#dc2626', cursor:'pointer', fontSize:'18px', padding:'0', lineHeight:'1' } }, '×')
+  );
+}
+
+// ============================================
+// SECURITY & SANITIZATION
+// ============================================
+function sanitizeHtml(html) {
+  if (!html) return '';
+  const div = document.createElement('div');
+  div.textContent = html;
+  return div.innerHTML;
+}
 
 // ============================================
 // UTILITY FUNCTIONS
@@ -1081,15 +1136,30 @@ function getStatusLabel(status) {
   return labels[status] || status;
 }
 
+function NavIcon({ type }) {
+  const iconProps = { width: 18, height: 18, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2 };
+  const icons = {
+    dashboard: <svg {...iconProps}><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>,
+    frameworks: <svg {...iconProps}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
+    evidence: <svg {...iconProps}><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>,
+    alerts: <svg {...iconProps}><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>,
+    policies: <svg {...iconProps}><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>,
+    reports: <svg {...iconProps}><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>,
+    billing: <svg {...iconProps}><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>,
+    settings: <svg {...iconProps}><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>,
+  };
+  return icons[type] || null;
+}
+
 function getActionIcon(action) {
   const icons = {
-    evidence_uploaded: '📎',
-    control_updated: '✅',
-    policy_generated: '📄',
-    framework_added: '🛡️',
-    alert_received: '🔔',
-    evidence_approved: '✓',
-    report_generated: '📊',
+    evidence_uploaded: '[Link]',
+    control_updated: '[Done]',
+    policy_generated: '[Doc]',
+    framework_added: '[FW]',
+    alert_received: '[!]',
+    evidence_approved: '[Done]',
+    report_generated: '[Report]',
   };
   return icons[action] || '•';
 }
@@ -1109,22 +1179,25 @@ function getActionColor(action) {
 
 function getEvidenceIcon(type) {
   const icons = {
-    screenshot: '🖼️',
-    document: '📄',
-    config: '⚙️',
-    certificate: '🎓',
-    policy: '📋',
-    report: '📊',
-    assessment: '🔍',
-    contract: '📝',
-    log: '📒',
+    screenshot: '[IMG]',
+    document: '[DOC]',
+    config: '[CFG]',
+    certificate: '[CERT]',
+    policy: '[POL]',
+    report: '[RPT]',
+    assessment: '[ASS]',
+    contract: '[CTR]',
+    log: '[LOG]',
   };
-  return icons[type] || '📎';
+  return icons[type] || '[FILE]';
 }
 
 function simpleMarkdown(text) {
   if (!text) return '';
-  let html = text
+  // Sanitize input by removing any script tags and event handlers
+  let clean = text.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    .replace(/on\w+\s*=\s*['"][^'"]*['"]/gi, '');
+  let html = clean
     .replace(/^### (.+)$/gm, '<h3>$1</h3>')
     .replace(/^## (.+)$/gm, '<h2>$1</h2>')
     .replace(/^# (.+)$/gm, '<h1>$1</h1>')
@@ -1139,7 +1212,7 @@ function simpleMarkdown(text) {
   html = html.replace(/\|(.+)\|/g, (match) => {
     const cells = match.split('|').filter(c => c.trim());
     if (cells.some(c => /^[-:]+$/.test(c.trim()))) return '';
-    return '<tr>' + cells.map(c => `<td>${c.trim()}</td>`).join('') + '</tr>';
+    return '<tr>' + cells.map(c => `<td>${sanitizeHtml(c.trim())}</td>`).join('') + '</tr>';
   });
   return html;
 }
@@ -1187,6 +1260,12 @@ function ScoreRing({ score, size = 140, strokeWidth = 8, label = "Compliance" })
 // MODAL COMPONENT
 // ============================================
 function Modal({ title, onClose, children }) {
+  useEffect(() => {
+    const handler = (e) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [onClose]);
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()}>
@@ -1250,7 +1329,7 @@ function LoginPage({ onEnterApp }) {
             {mode === 'signup' && (
               <div style={{ marginBottom:16 }}>
                 <label style={{ display:'block', fontSize:13, fontWeight:600, color:'var(--text-secondary)', marginBottom:6 }}>Full name</label>
-                <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Jordan Chen"
+                <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Your name"
                   style={{ width:'100%', padding:'10px 14px', borderRadius:8, border:'1px solid var(--border)', background:'var(--bg-input)', color:'white', fontSize:14, outline:'none' }} />
               </div>
             )}
@@ -1293,13 +1372,13 @@ function LoginPage({ onEnterApp }) {
 // DASHBOARD PAGE
 // ============================================
 function DashboardPage({ dashboard, onNavigate }) {
-  if (!dashboard) return <div className="loading" style={{padding:40}}>Loading dashboard...</div>;
+  if (!dashboard) return <Loading text="Loading dashboard..." />;
 
   return (
     <div>
       <div className="page-header">
         <div className="page-title">Dashboard</div>
-        <div className="page-subtitle">Welcome back, Jordan. Here's your compliance overview.</div>
+        <div className="page-subtitle">Welcome back. Here's your compliance overview.</div>
       </div>
 
       <div className="stats-grid">
@@ -1416,7 +1495,7 @@ function FrameworksPage() {
   const [filter, setFilter] = useState('all');
   const [editingControl, setEditingControl] = useState(null);
 
-  useEffect(() => { api.get('/frameworks').then(setFrameworks); }, []);
+  useEffect(() => { api.get('/frameworks').then(data => { if (data) setFrameworks(data); }); }, []);
 
   const loadControls = async (fwId) => {
     setSelectedFw(fwId);
@@ -1585,14 +1664,14 @@ function EvidencePage() {
   const [controls, setControls] = useState([]);
 
   useEffect(() => {
-    api.get('/evidence').then(setEvidence);
-    api.get('/frameworks/soc2/controls').then(setControls);
+    api.get('/evidence').then(data => { if (data) setEvidence(data); });
+    api.get('/frameworks/soc2/controls').then(data => { if (data) setControls(data); });
   }, []);
 
   const addEvidence = async () => {
     await api.post('/evidence', form);
     const data = await api.get('/evidence');
-    setEvidence(data);
+    if (data) setEvidence(data);
     setShowAdd(false);
     setForm({ title: '', description: '', type: 'document', source: '', control_id: '' });
   };
@@ -1623,6 +1702,11 @@ function EvidencePage() {
       </div>
 
       <div className="card" style={{padding:0}}>
+        {evidence.length === 0 && (
+          <div style={{textAlign:'center',padding:'48px',color:'var(--text-muted)'}}>
+            No evidence items found
+          </div>
+        )}
         {evidence.map(ev => (
           <div key={ev.id} className="evidence-item" style={{margin:0, borderRadius:0, borderLeft:'none', borderRight:'none', borderTop:'none'}}>
             <div className="evidence-icon" style={{background: ev.status === 'approved' ? 'var(--success-bg)' : 'var(--info-bg)'}}>
@@ -1694,14 +1778,14 @@ function AlertsPage() {
   const [alerts, setAlerts] = useState([]);
   const [selected, setSelected] = useState(null);
 
-  useEffect(() => { api.get('/alerts').then(setAlerts); }, []);
+  useEffect(() => { api.get('/alerts').then(data => { if (data) setAlerts(data); }); }, []);
 
   const markRead = async (id) => {
     await api.post(`/alerts/${id}/read`);
     setAlerts(alerts.map(a => a.id === id ? {...a, is_read: 1} : a));
   };
 
-  const severityIcon = { critical: '🔴', high: '🟠', medium: '🟡', info: '🔵' };
+  const severityIcon = { critical: '●', high: '●', medium: '●', info: '●' };
 
   return (
     <div>
@@ -1725,9 +1809,15 @@ function AlertsPage() {
         </div>
       </div>
 
+      {alerts.length === 0 && (
+        <div style={{textAlign:'center',padding:'48px',color:'var(--text-muted)'}}>
+          No alerts
+        </div>
+      )}
+
       {alerts.map(alert => (
         <div key={alert.id} className={`alert-item ${!alert.is_read ? 'unread' : ''}`} onClick={() => { setSelected(alert); markRead(alert.id); }}>
-          <div className="alert-icon">{severityIcon[alert.severity] || '🔵'}</div>
+          <div className="alert-icon" style={{color: alert.severity === 'critical' ? 'var(--danger)' : alert.severity === 'high' ? 'var(--warning)' : alert.severity === 'medium' ? 'var(--info)' : 'var(--text-muted)'}}>{severityIcon[alert.severity] || '●'}</div>
           <div className="alert-content">
             <div className="alert-title">{alert.title}</div>
             <div className="alert-summary">{alert.summary}</div>
@@ -1769,13 +1859,13 @@ function PoliciesPage() {
   const [showGenerate, setShowGenerate] = useState(false);
   const [genType, setGenType] = useState('Acceptable Use Policy');
 
-  useEffect(() => { api.get('/policies').then(setPolicies); }, []);
+  useEffect(() => { api.get('/policies').then(data => { if (data) setPolicies(data); }); }, []);
 
   const generatePolicy = async () => {
     setGenerating(true);
     const result = await api.post('/policies/generate', { type: genType });
     const data = await api.get('/policies');
-    setPolicies(data);
+    if (data) setPolicies(data);
     setShowGenerate(false);
     setGenerating(false);
   };
@@ -1795,10 +1885,15 @@ function PoliciesPage() {
           <div className="page-title">Policy Center</div>
           <div className="page-subtitle">AI-generated policies tailored to your business.</div>
         </div>
-        <button className="btn btn-primary" onClick={() => setShowGenerate(true)}>🤖 Generate Policy</button>
+        <button className="btn btn-primary" onClick={() => setShowGenerate(true)}>Generate Policy</button>
       </div>
 
       <div className="framework-grid">
+        {policies.length === 0 && (
+          <div style={{textAlign:'center',padding:'48px',color:'var(--text-muted)',gridColumn:'1 / -1'}}>
+            No policies generated yet
+          </div>
+        )}
         {policies.map(p => (
           <div key={p.id} className="framework-card" onClick={() => setSelected(p)}>
             <div className="framework-card-header">
@@ -1812,13 +1907,6 @@ function PoliciesPage() {
         ))}
       </div>
 
-      {policies.length === 0 && (
-        <div className="empty-state">
-          <div className="empty-state-icon">📄</div>
-          <div className="empty-state-title">No policies yet</div>
-          <div className="empty-state-desc">Generate your first AI-powered compliance policy in seconds.</div>
-        </div>
-      )}
 
       {selected && (
         <Modal title={selected.title} onClose={() => setSelected(null)}>
@@ -1832,7 +1920,7 @@ function PoliciesPage() {
             <button className="btn btn-primary" onClick={async () => {
               await api.put(`/policies/${selected.id}`, {...selected, status: 'approved'});
               const data = await api.get('/policies');
-              setPolicies(data);
+              if (data) setPolicies(data);
               setSelected(null);
             }}>Approve Policy</button>
           </div>
@@ -1853,7 +1941,7 @@ function PoliciesPage() {
           <div className="modal-actions">
             <button className="btn btn-secondary" onClick={() => setShowGenerate(false)}>Cancel</button>
             <button className="btn btn-primary" onClick={generatePolicy} disabled={generating}>
-              {generating ? 'Generating...' : '🤖 Generate Policy'}
+              {generating ? 'Generating...' : 'Generate Policy'}
             </button>
           </div>
         </Modal>
@@ -1870,12 +1958,12 @@ function ReportsPage() {
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => { api.get('/frameworks').then(setFrameworks); }, []);
+  useEffect(() => { api.get('/frameworks').then(data => { if (data) setFrameworks(data); }); }, []);
 
   const generateReport = async (fwId) => {
     setLoading(true);
     const data = await api.get(`/reports/compliance/${fwId}`);
-    setReport(data);
+    if (data) setReport(data);
     setLoading(false);
   };
 
@@ -1960,17 +2048,15 @@ function ReportsPage() {
             <div style={{fontSize:18, fontWeight:700, marginBottom:8}}>{fw.short_name} Report</div>
             <div style={{fontSize:13, color:'var(--text-secondary)', marginBottom:16}}>{fw.name}</div>
             <button className="btn btn-primary btn-sm">
-              {loading ? 'Generating...' : '📊 Generate Report'}
+              {loading ? 'Generating...' : 'Generate Report'}
             </button>
           </div>
         ))}
       </div>
 
       {frameworks.filter(f => f.subscribed).length === 0 && (
-        <div className="empty-state">
-          <div className="empty-state-icon">📊</div>
-          <div className="empty-state-title">No active frameworks</div>
-          <div className="empty-state-desc">Activate a compliance framework first to generate reports.</div>
+        <div style={{textAlign:'center',padding:'48px',color:'var(--text-muted)'}}>
+          No active frameworks. Activate a compliance framework first to generate reports.
         </div>
       )}
     </div>
@@ -1993,7 +2079,7 @@ function SettingsPage() {
           <div className="card-title" style={{marginBottom:16}}>Organization</div>
           <div className="form-group">
             <label className="form-label">Company Name</label>
-            <input className="form-input" defaultValue="Acme SaaS Co." />
+            <input className="form-input" placeholder="Your organization name" />
           </div>
           <div className="form-group">
             <label className="form-label">Industry</label>
@@ -2021,11 +2107,11 @@ function SettingsPage() {
           <div className="card-title" style={{marginBottom:16}}>Account</div>
           <div className="form-group">
             <label className="form-label">Full Name</label>
-            <input className="form-input" defaultValue="Jordan Chen" />
+            <input className="form-input" placeholder="Your name" />
           </div>
           <div className="form-group">
             <label className="form-label">Email</label>
-            <input className="form-input" defaultValue="admin@acmesaas.com" />
+            <input className="form-input" placeholder="your.email@company.com" />
           </div>
           <div className="form-group">
             <label className="form-label">Role</label>
@@ -2058,8 +2144,8 @@ function BillingPage() {
   const [loading, setLoading] = useState(null);
 
   useEffect(() => {
-    api.get('/billing/plans').then(d => setPlans(d.plans || []));
-    api.get('/billing/subscription').then(setSubscription);
+    api.get('/billing/plans').then(d => { if (d) setPlans(d.plans || []); });
+    api.get('/billing/subscription').then(d => { if (d) setSubscription(d); });
   }, []);
 
   const checkout = async (planId) => {
@@ -2189,12 +2275,12 @@ function App() {
   }
 
   const navItems = [
-    { id: 'dashboard', icon: '📊', label: 'Dashboard' },
-    { id: 'frameworks', icon: '🛡️', label: 'Frameworks' },
-    { id: 'evidence', icon: '📎', label: 'Evidence' },
-    { id: 'alerts', icon: '📡', label: 'Regulatory Radar', badge: dashboard?.unread_alerts },
-    { id: 'policies', icon: '📄', label: 'Policies' },
-    { id: 'reports', icon: '📑', label: 'Reports' },
+    { id: 'dashboard', iconType: 'dashboard', label: 'Dashboard' },
+    { id: 'frameworks', iconType: 'frameworks', label: 'Frameworks' },
+    { id: 'evidence', iconType: 'evidence', label: 'Evidence' },
+    { id: 'alerts', iconType: 'alerts', label: 'Regulatory Radar', badge: dashboard?.unread_alerts },
+    { id: 'policies', iconType: 'policies', label: 'Policies' },
+    { id: 'reports', iconType: 'reports', label: 'Reports' },
   ];
 
   const renderPage = () => {
@@ -2223,7 +2309,7 @@ function App() {
             <div className="nav-section-title">Overview</div>
             {navItems.slice(0, 1).map(item => (
               <button key={item.id} className={`nav-item ${page === item.id ? 'active' : ''}`} onClick={() => setPage(item.id)}>
-                <span className="nav-item-icon">{item.icon}</span>
+                <span className="nav-item-icon"><NavIcon type={item.iconType} /></span>
                 {item.label}
                 {item.badge > 0 && <span className="nav-badge">{item.badge}</span>}
               </button>
@@ -2233,7 +2319,7 @@ function App() {
             <div className="nav-section-title">Compliance</div>
             {navItems.slice(1, 4).map(item => (
               <button key={item.id} className={`nav-item ${page === item.id ? 'active' : ''}`} onClick={() => setPage(item.id)}>
-                <span className="nav-item-icon">{item.icon}</span>
+                <span className="nav-item-icon"><NavIcon type={item.iconType} /></span>
                 {item.label}
                 {item.badge > 0 && <span className="nav-badge">{item.badge}</span>}
               </button>
@@ -2243,7 +2329,7 @@ function App() {
             <div className="nav-section-title">Tools</div>
             {navItems.slice(4).map(item => (
               <button key={item.id} className={`nav-item ${page === item.id ? 'active' : ''}`} onClick={() => setPage(item.id)}>
-                <span className="nav-item-icon">{item.icon}</span>
+                <span className="nav-item-icon"><NavIcon type={item.iconType} /></span>
                 {item.label}
               </button>
             ))}
@@ -2251,18 +2337,18 @@ function App() {
           <div className="nav-section">
             <div className="nav-section-title">Account</div>
             <button className={`nav-item ${page === 'billing' ? 'active' : ''}`} onClick={() => setPage('billing')}>
-              <span className="nav-item-icon">💳</span>
+              <span className="nav-item-icon"><NavIcon type="billing" /></span>
               Billing
             </button>
             <button className={`nav-item ${page === 'settings' ? 'active' : ''}`} onClick={() => setPage('settings')}>
-              <span className="nav-item-icon">⚙️</span>
+              <span className="nav-item-icon"><NavIcon type="settings" /></span>
               Settings
             </button>
           </div>
         </nav>
         <div className="sidebar-footer">
           <div className="user-info">
-            <div className="user-avatar">{(() => { try { const u = JSON.parse(localStorage.getItem('ck_user') || '{}'); return (u.name || 'U').slice(0,2).toUpperCase(); } catch(e) { return 'JC'; } })()}</div>
+            <div className="user-avatar">{(() => { try { const u = JSON.parse(localStorage.getItem('ck_user') || '{}'); return (u.name || 'U').slice(0,2).toUpperCase(); } catch(e) { return 'U'; } })()}</div>
             <div className="user-details">
               <div className="user-name">{(() => { try { return JSON.parse(localStorage.getItem('ck_user') || '{}').name || 'User'; } catch(e) { return 'User'; } })()}</div>
               <div className="user-role" style={{ cursor:'pointer', color:'var(--danger)' }} onClick={() => { localStorage.removeItem('ck_user'); window.location.reload(); }}>Sign out</div>
